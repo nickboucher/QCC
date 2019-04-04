@@ -17,6 +17,8 @@ The only instructions that are natively supported by Rigetti are:
 # PyQuil #
 PyQuil offers an expanded range of value quantum instructions, as well some nice functions for working with classical gates
 
+See https://pyquil.readthedocs.io/en/stable/ for more info / reference
+
 ## Quantum Instructions ##
 - Identity
 - `X`, `Y`, `Z`
@@ -37,7 +39,7 @@ PyQuil offers an expanded range of value quantum instructions, as well some nice
 - `LOAD`, `STORE`
 - ...
 
-## Other Nice Language Features
+## Other Nice Language Features ##
 - Can add gates to a program with addition: `prog += H(0)`
 - can create "cyborg" programs with quantum programs nested in classical programs:
   - `prog.while_do(classical_reg, q_prog)`
