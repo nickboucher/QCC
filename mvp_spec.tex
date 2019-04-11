@@ -1,0 +1,49 @@
+\documentclass[10pt,letter]{article}
+
+\usepackage{fullpage}
+
+\begin{document}
+
+\begin{section}{Problem Statement}
+
+  A tool which takes as input a source quantum assembly program and a target hardware and outputs an equivalent program that can be run directly on that hardware.
+
+\end{section}
+
+\begin{section}{Approach}
+
+  If the source program is native to the target hardware, i.e.~there is a direct compilation path from the source to the target (e.g.~qasm to an IBM machine), then that path is taken.
+  Otherwise, the source is compiled through an intermediary language.
+
+\end{section}
+
+\begin{section}{Classes/Modules}
+
+  \begin{itemize}
+  \item \texttt{static Main}
+  \item \texttt{interface Program}
+  \item \texttt{interface AssemblyProgram extends Program}
+  \item \texttt{interface HardwareProgram extends Program}
+  \item \texttt{interface <I, O> Compiler}
+  \item \texttt{class IntermediaryProgram implements Program}
+  \item \texttt{class QasmProgram implements AssemblyProgram}
+  \item \texttt{class QuilProgram implements AssemblyProgram}
+  \item \texttt{class SomeSpecificIBMHardwareProgram implements HardwareProgram}
+  \item \texttt{class SomeSpecificRigettiHardwareProgram implements HardwareProgram}
+  \end{itemize}
+
+\end{section}
+
+\begin{section}{Logic}
+
+  The user will use a terminal command to pass in a source program and target hardware.
+  Let's call the source language \texttt{I} and the target language \texttt{O}.
+
+  \texttt{Main} will check if a direct compilation path exists.
+  If so, it will use a \texttt{<I, O> Compiler} to produce a target program.
+  Otherwise, it will determine the appropriate assembly language \texttt{A} use a \texttt{<I, IntermediaryProgram> Compiler}, a \texttt{<IntermediaryProgram, A> Compiler}, and a \texttt{<A, O> Compiler}.
+  \texttt{Main} will then output the target program.
+
+\end{section}
+
+\end{document}
