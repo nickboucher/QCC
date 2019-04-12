@@ -7,13 +7,6 @@ class Program(ABC):
   class InvalidQuantumProgram(Exception):
     pass
 
-class IntermediaryProgram(Program):
-  """ Represents intermediary program used in compiling """
-
-  def __init__(self, program=[]):
-    """ Instantiate a new Intermediary Program """
-    self.program = program
-
   def get_hardware_constrained_asm_compiler(self, target):
     """ Returns a compiler from the Intermediate Language
     to a given hardware target """
