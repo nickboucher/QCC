@@ -5,7 +5,7 @@ class Program(ABC):
   """ Represents generic abstract program language """
 
   class InvalidProgram(Exception):
-	    """ Raised when a qantum program is invalid """
+    """ Raised when a quantum program is invalid """
     pass
 
 class IntermediaryProgram(Program):
@@ -21,7 +21,7 @@ class IntermediaryProgram(Program):
     raise NotImplementedError
 
 class AsmProgram(ABC, Program):
-  """ Represents an abstract qantum assembly language """
+  """ Represents an abstract quantum assembly language """
 
   @abstractmethod
   def get_intermediary_compiler(self):
@@ -30,12 +30,12 @@ class AsmProgram(ABC, Program):
     pass
 
 class HardwareProgram(ABC):
-  """ Represents a machine-language qantum program
+  """ Represents a machine-language quantum program
   targeting specific hardware """
   pass
 
 class Compiler(ABC):
-  """ Represents a compiler between two qantum languages """
+  """ Represents a compiler between two quantum languages """
 
   @abstractclass
   def compile(self):
