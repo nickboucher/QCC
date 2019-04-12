@@ -29,7 +29,7 @@ class AsmProgram(Program, ABC):
     the given assembly language of the subclass """
     pass
 
-class HardwareProgram(ABC):
+class HardwareContrainedProgram(ABC):
   """ Represents a machine-language quantum program
   targeting specific hardware """
   pass
