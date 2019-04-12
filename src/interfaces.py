@@ -4,8 +4,7 @@ from abc import ABC, abstractmethod
 class Program(ABC):
   """ Represents generic abstract program language """
 
-  class InvalidProgram(Exception):
-    """ Raised when a quantum program is invalid """
+  class InvalidQuantumProgram(Exception):
     pass
 
 class IntermediaryProgram(Program):
