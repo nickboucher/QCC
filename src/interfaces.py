@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from abc import ABC
+from abc import ABC, abstractmethod
 
 class Program(ABC):
   """ Represents generic abstract program language """
@@ -20,7 +20,7 @@ class IntermediaryProgram(Program):
     to a given hardware target """
     raise NotImplementedError
 
-class AsmProgram(ABC, Program):
+class AsmProgram(Program, ABC):
   """ Represents an abstract quantum assembly language """
 
   @abstractmethod
@@ -37,7 +37,7 @@ class HardwareProgram(ABC):
 class Compiler(ABC):
   """ Represents a compiler between two quantum languages """
 
-  @abstractclass
+  @abstractmethod
   def compile(self):
     """ Returns a program compiled from the source language
     to the target languange """
