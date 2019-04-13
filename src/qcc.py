@@ -1,25 +1,37 @@
 #!/usr/bin/env python3
 import sys
 import argparse
+import langs
 from assembly import *
 
-def parseArgs():
+def parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument('source-lang', choices=['qasm', 'quil'])
-    parser.add_argument('target-lang', choices=['ibm01'])
+    parser.add_argument('source-lang', choices=langs.asm_langs)
+    parser.add_argument('target-lang', choices=langs.hw_langs)
     parser.add_argument('source', type=argparse.FileType('r'))
     return vars(parser.parse_args())
 
-def createSourceProg(lang, sourceFile):
-    progString = sourceFile.read()
-    if lang == 'qasm':
-        return QASM(progString)
-    elif lang == 'quil':
-        return Quil(progString)
+def create_source_prog(lang, source_file):
+    prog_string = source_file.read()
+    if lang == langs.qasm_lang:
+        return QASM(prog_string)
+    elif lang == langs.quil_lang:
+        return Quil(prog_string)
 
 def main():
-    args = parseArgs()
-    sourceProg = createSourceProg(args['source-lang'], args['source'])
+    args = parse()
+    print("Request: compile", args['source-lang'], "to", args['target-lang'])
+
+    source_prog = create_source_prog(args['source-lang'], args['source'])
+
+    if langs.direct_compile_from[args['target-lang']] == args['source-lang']:
+        print("Direct compilation path found")
+        ## TODO: run direct compilation
+        return
+
+    print("No direct compilation path found: compiling through intermediary language")
+    compiler = source_prog.get_intermediary_compiler()
+    ## TODO: run compiler
 
 if __name__ == '__main__':
     main()

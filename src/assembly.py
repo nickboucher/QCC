@@ -6,11 +6,11 @@ class QASM(AsmProgram):
 
     def __init__(self, program=""):
         self.program = program
-        raise NotImplementedError
 
     def get_intermediary_compiler(self):
       """ Returns an intermediary language compiler for
       the given assembly language of the subclass """
+      ## TODO: Implement
       pass
 
 class Quil(AsmProgram):
@@ -18,9 +18,8 @@ class Quil(AsmProgram):
 
     def __init__(self, program=""):
         self.program = program
-        raise NotImplementedError
 
     def get_intermediary_compiler(self):
       """ Returns an intermediary language compiler for
       the given assembly language of the subclass """
-      pass
+      ## TODO: Implement
