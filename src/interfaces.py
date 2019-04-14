@@ -7,11 +7,6 @@ class Program(ABC):
   class InvalidQuantumProgram(Exception):
     pass
 
-  def get_hardware_constrained_asm_compiler(self, target):
-    """ Returns a compiler from the Intermediate Language
-    to a given hardware target """
-    raise NotImplementedError
-
 class AsmProgram(Program, ABC):
   """ Represents an abstract quantum assembly language """
 
@@ -30,7 +25,7 @@ class Compiler(ABC):
   """ Represents a compiler between two quantum languages """
 
   @abstractmethod
-  def compile(self):
+  def compile(self, source):
     """ Returns a program compiled from the source language
     to the target languange """
     pass

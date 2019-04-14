@@ -30,8 +30,11 @@ def main():
         return
 
     print("No direct compilation path found: compiling through intermediary language")
-    compiler = source_prog.get_intermediary_compiler()
-    ## TODO: run compiler
+    intermediary_compiler = source_prog.get_intermediary_compiler()
+    intermediary_prog = intermediary_compiler.compile(source_prog)
+    hardware_compiler = intermediary_prog.get_hardware_compiler(args['target-lang'])
+    hardware_prog = hardware_compiler.compile(intermediary_prog)
+    print("Result below:", hardware_prog, sep='\n')
 
 if __name__ == '__main__':
     main()

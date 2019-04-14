@@ -5,6 +5,9 @@ from interfaces import *
 class IBM_01(HardwareContrainedProgram):
     """ Example class for assembly contrained to a specific hardware """
 
-    def __init__(self, program=[]):
+    def __init__(self, program=""):
+        ## TODO: Implement
         self.program = program
-        raise NotImplementedError
+
+    def __str__(self):
+        return self.program
