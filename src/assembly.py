@@ -8,8 +8,15 @@ class QASM(AsmProgram):
     def __init__(self, program=""):
         self.program = program
 
-    def get_intermediary_compiler(self):
+    @staticmethod
+    def get_intermediary_compiler():
       return QASM_Intermediary_Compiler()
+
+    @staticmethod
+    def direct_compile(src, target_backend, ibmq_session):
+        # TODO: actually compile using qiskit API
+        return "TODO(Juan)"
+
 
 class Quil(AsmProgram):
     """ QCC Wrapper for Rigetti's Python Quil representation """
@@ -17,5 +24,6 @@ class Quil(AsmProgram):
     def __init__(self, program=""):
         self.program = program
 
-    def get_intermediary_compiler(self):
+    @staticmethod
+    def get_intermediary_compiler():
         return Quil_Intermediary_Compiler()
