@@ -2,6 +2,9 @@
 import sys
 import argparse
 import langs
+
+import ibmq
+
 from assembly import *
 
 def parse():
@@ -19,9 +22,15 @@ def create_source_prog(lang, source_file):
         return Quil(prog_string)
 
 def main():
-    args = parse()
-    print("Request: compile", args['source-lang'], "to", args['target-lang'])
+    # load the different IBM hardware platforms
+    print("Loading ibmqx account and information...")
+    ibmq_session = ibmq.IBMQ()
+    langs.add_direct_compile(ibmq_session.backend_names, langs.qasm_lang)
+    langs.add_hw_lang(ibmq_session.backend_names)
 
+    args = parse()
+
+    print("Request: compile", args['source-lang'], "to", args['target-lang'])
     source_prog = create_source_prog(args['source-lang'], args['source'])
 
     if langs.direct_compile_from[args['target-lang']] == args['source-lang']:
