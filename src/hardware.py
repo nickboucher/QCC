@@ -2,7 +2,7 @@
 from interfaces import *
 
 # TODO -- Come up with actual list of hardwares and implement
-class IBM_01(HardwareContrainedProgram):
+class IBM(HardwareContrainedProgram):
     """ Example class for assembly contrained to a specific hardware """
 
     def __init__(self, program=""):

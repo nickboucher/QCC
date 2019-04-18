@@ -1,8 +1,8 @@
 qasm_lang = "qasm"
 quil_lang = "quil"
-ibm01_lang = "ibm01"
 
 asm_langs = [qasm_lang, quil_lang]
+ibm_langs = []
 hw_langs = []
 
 # load ibm hardware from IBM backends
@@ -18,5 +18,6 @@ def add_direct_compile(hws, src_lang):
 
 
 # similar use to the above
-def add_hw_lang(hws):
+def add_ibm_langs(hws):
+    ibm_langs.extend(hws)
     hw_langs.extend(hws)

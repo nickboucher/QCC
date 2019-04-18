@@ -25,7 +25,7 @@ def main():
     print("Loading ibmqx account and information...")
     ibmq_session = ibmq.IBMQ()
     langs.add_direct_compile(ibmq_session.backend_names, langs.qasm_lang)
-    langs.add_hw_lang(ibmq_session.backend_names)
+    langs.add_ibm_langs(ibmq_session.backend_names)
 
     args = parse()
 
