@@ -10,8 +10,9 @@ class Program(ABC):
 class AsmProgram(Program, ABC):
   """ Represents an abstract quantum assembly language """
 
+  @staticmethod
   @abstractmethod
-  def get_intermediary_compiler(self):
+  def get_intermediary_compiler():
     """ Returns an intermediary language compiler for
     the given assembly language of the subclass """
     pass
