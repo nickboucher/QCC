@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import sys
 import argparse
-import langs
 
+import langs
 import ibmq
 
 from assembly import *
@@ -30,19 +30,13 @@ def main():
     args = parse()
 
     print("Request: compile", args['source-lang'], "to", args['target-lang'])
+    source_prog = create_source_prog(args['source-lang'], args['source'])
 
     if langs.direct_compile_from[args['target-lang']] == args['source-lang']:
-        if args['source-lang'] == langs.qasm_lang:
-            hardware_prog = \
-                QASM.direct_compile(args['source'].read(), args['target-lang'], ibmq_session)
-        elif args['source-lang'] == langs.quil_lang:
-            # TODO: figure out how to compile quil
-            hardware_prog = "TODO"
-            pass
+        direct_compiler = source_prog.get_direct_compiler(args['target-lang'])
+        hardware_prog = direct_compiler.compile(source_prog)
     else:
         print("No direct compilation path found: compiling through intermediary language")
-        source_prog = create_source_prog(args['source-lang'], args['source'])
-
         intermediary_compiler = source_prog.get_intermediary_compiler()
         intermediary_prog = intermediary_compiler.compile(source_prog)
         hardware_compiler = intermediary_prog.get_hardware_compiler(args['target-lang'])

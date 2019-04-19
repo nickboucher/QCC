@@ -16,6 +16,12 @@ class AsmProgram(Program, ABC):
     the given assembly language of the subclass """
     pass
 
+  @staticmethod
+  @abstractmethod
+  def get_direct_compiler(target_lang):
+    """ Returns a direct compiler from this language to target_lang """
+    pass
+
 class HardwareContrainedProgram(ABC):
   """ Represents a machine-language quantum program
   targeting specific hardware """

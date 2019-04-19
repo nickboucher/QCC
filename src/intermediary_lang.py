@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import langs
 from interfaces import *
-from hardware_compilers import *
+from compilers_from_intermediary import *
 
 class IntermediaryProgram(Program):
   """ Represents intermediary program used in compiling """
