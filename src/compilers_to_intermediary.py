@@ -6,13 +6,13 @@ from intermediary_lang import *
 class QASM_Intermediary_Compiler(Compiler):
     """ Compiles QASM to Intermediary Language """
 
-    def compile(self, source):
+    def compile(self, source, target_lang):
         ## Implement this
         return IntermediaryProgram("TODO")
 
 class Quil_Intermediary_Compiler(Compiler):
     """ Compiles Quil to Intermediary Language """
 
-    def compile(self, source):
+    def compile(self, source, target_lang):
         ## Implement this
         return IntermediaryProgram("TODO")

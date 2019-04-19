@@ -6,6 +6,6 @@ from hardware import *
 class Intermediary_IBM_Compiler(Compiler):
     """ Compiles Intermediary Language to IBM """
 
-    def compile(self, source):
+    def compile(self, source, target_lang):
         ## Implement this
         return IBM("TODO")

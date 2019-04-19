@@ -11,7 +11,7 @@ def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('source-lang', choices=langs.asm_langs)
     parser.add_argument('target-lang', choices=langs.hw_langs)
-    parser.add_argument('source', type=argparse.FileType('r'))
+    parser.add_argument('source', type=argparse.FileType(mode='r', encoding='utf-8'))
     return vars(parser.parse_args())
 
 def create_source_prog(lang, source_file):
@@ -22,10 +22,9 @@ def create_source_prog(lang, source_file):
         return Quil(prog_string)
 
 def main():
-    print("Loading ibmqx account and information...")
-    ibmq_session = ibmq.IBMQ()
-    langs.add_direct_compile(ibmq_session.backend_names, langs.qasm_lang)
-    langs.add_ibm_langs(ibmq_session.backend_names)
+    ibmq.init()
+    langs.add_direct_compile(ibmq.backend_names, langs.qasm_lang)
+    langs.add_ibm_langs(ibmq.backend_names)
 
     args = parse()
 
@@ -34,13 +33,13 @@ def main():
 
     if langs.direct_compile_from[args['target-lang']] == args['source-lang']:
         direct_compiler = source_prog.get_direct_compiler(args['target-lang'])
-        hardware_prog = direct_compiler.compile(source_prog)
+        hardware_prog = direct_compiler.compile(source_prog, args['target-lang'])
     else:
         print("No direct compilation path found: compiling through intermediary language")
         intermediary_compiler = source_prog.get_intermediary_compiler()
         intermediary_prog = intermediary_compiler.compile(source_prog)
         hardware_compiler = intermediary_prog.get_hardware_compiler(args['target-lang'])
-        hardware_prog = hardware_compiler.compile(intermediary_prog)
+        hardware_prog = hardware_compiler.compile(intermediary_prog, args['target-lang'])
 
     print("Result below:", hardware_prog, sep='\n')
 
