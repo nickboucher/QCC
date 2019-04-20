@@ -36,6 +36,7 @@ def main():
     source_prog = create_source_prog(args['source-lang'], args['source'])
 
     if langs.direct_compile_from[args['target-lang']] == args['source-lang']:
+        print("Direct compilation path found: compiling directly")
         direct_compiler = source_prog.get_direct_compiler(args['target-lang'])
         hardware_prog = direct_compiler.compile(source_prog, args['target-lang'])
     else:

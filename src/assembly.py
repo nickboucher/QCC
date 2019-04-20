@@ -37,4 +37,7 @@ class Quil(AsmProgram):
 
     @staticmethod
     def get_direct_compiler(target_lang):
-        raise ValueError("Requested direct compiler does not exist.")
+        if target_lang in langs.rigetti_langs:
+            return direct_compilers.Quil_Rigetti_Compiler()
+        else:
+            raise ValueError("Requested direct compiler does not exist.")
