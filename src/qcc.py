@@ -37,7 +37,7 @@ def main():
     else:
         print("No direct compilation path found: compiling through intermediary language")
         intermediary_compiler = source_prog.get_intermediary_compiler()
-        intermediary_prog = intermediary_compiler.compile(source_prog)
+        intermediary_prog = intermediary_compiler.compile(source_prog, args['target-lang'])
         hardware_compiler = intermediary_prog.get_hardware_compiler(args['target-lang'])
         hardware_prog = hardware_compiler.compile(intermediary_prog, args['target-lang'])
 
