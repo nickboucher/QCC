@@ -16,3 +16,5 @@ class IntermediaryProgram(Program):
       raise ValueError("target_lang must be a valid hardware language")
     if target_lang in langs.ibm_langs:
       return Intermediary_IBM_Compiler()
+    else:
+      raise ValueError("Requested compiler does not exist.")

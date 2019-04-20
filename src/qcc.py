@@ -3,7 +3,7 @@ import sys
 import argparse
 
 import langs
-import ibmq
+import ibmq, rigetti
 
 from assembly import *
 
@@ -25,6 +25,10 @@ def main():
     ibmq.init()
     langs.add_direct_compile(ibmq.backend_names, langs.qasm_lang)
     langs.add_ibm_langs(ibmq.backend_names)
+
+    rigetti.init()
+    langs.add_direct_compile(rigetti.backend_names, langs.quil_lang)
+    langs.add_rigetti_langs(rigetti.backend_names)
 
     args = parse()
 
