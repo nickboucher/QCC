@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import qiskit
 
-import qcc.config
-import qcc.compilers.direct_compilers
-import qcc.compilers.compilers_to_intermediary
+from qcc.compilers import direct_compilers
+from qcc import config
+from qcc.compilers import compilers_to_intermediary
 from qcc.interfaces import *
 
 class QASM(AsmProgram):

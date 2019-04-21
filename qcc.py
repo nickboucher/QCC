@@ -8,9 +8,13 @@ import qcc.hardware.rigetti
 
 from qcc.assembly import *
 
+from qcc import *
+from qcc.hardware import *
+
 def parse():
     parser = argparse.ArgumentParser()
     parser.add_argument('source-lang', choices=config.asm_langs)
+    print(config.hw_langs)
     parser.add_argument('target-lang', choices=config.hw_langs)
     parser.add_argument('source', type=argparse.FileType(mode='r', encoding='utf-8'))
     return vars(parser.parse_args())
@@ -25,11 +29,11 @@ def create_source_prog(lang, source_file):
 def main():
     ibmq.init()
     config.add_direct_compile(ibmq.backend_names, config.qasm_lang)
-    config.add_ibm_config(ibmq.backend_names)
+    config.add_ibm_langs(ibmq.backend_names)
 
     rigetti.init()
     config.add_direct_compile(rigetti.backend_names, config.quil_lang)
-    config.add_rigetti_config(rigetti.backend_names)
+    # config.add_rigetti_config(rigetti.backend_names) This doesn't exist.
 
     args = parse()
 
