@@ -1,3 +1,12 @@
+#!/usr/bin/env python3
+from configparser import ConfigParser
+from os.path import exists
+
+config = ConfigParser()
+if exists("config.ini"):
+    config.read("config.ini")
+
+
 qasm_lang = "qasm"
 quil_lang = "quil"
 

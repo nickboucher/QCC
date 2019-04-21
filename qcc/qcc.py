@@ -2,40 +2,41 @@
 import sys
 import argparse
 
-import langs
-import ibmq, rigetti
+import qcc.config
+import qcc.hardware.ibmq
+import qcc.hardware.rigetti
 
-from assembly import *
+from qcc.assembly import *
 
 def parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument('source-lang', choices=langs.asm_langs)
-    parser.add_argument('target-lang', choices=langs.hw_langs)
+    parser.add_argument('source-lang', choices=config.asm_langs)
+    parser.add_argument('target-lang', choices=config.hw_langs)
     parser.add_argument('source', type=argparse.FileType(mode='r', encoding='utf-8'))
     return vars(parser.parse_args())
 
 def create_source_prog(lang, source_file):
     prog_string = source_file.read()
-    if lang == langs.qasm_lang:
+    if lang == config.qasm_lang:
         return QASM(prog_string)
-    elif lang == langs.quil_lang:
+    elif lang == config.quil_lang:
         return Quil(prog_string)
 
 def main():
     ibmq.init()
-    langs.add_direct_compile(ibmq.backend_names, langs.qasm_lang)
-    langs.add_ibm_langs(ibmq.backend_names)
+    config.add_direct_compile(ibmq.backend_names, config.qasm_lang)
+    config.add_ibm_config(ibmq.backend_names)
 
     rigetti.init()
-    langs.add_direct_compile(rigetti.backend_names, langs.quil_lang)
-    langs.add_rigetti_langs(rigetti.backend_names)
+    config.add_direct_compile(rigetti.backend_names, config.quil_lang)
+    config.add_rigetti_config(rigetti.backend_names)
 
     args = parse()
 
     print("Request: compile", args['source-lang'], "to", args['target-lang'])
     source_prog = create_source_prog(args['source-lang'], args['source'])
 
-    if langs.direct_compile_from[args['target-lang']] == args['source-lang']:
+    if config.direct_compile_from[args['target-lang']] == args['source-lang']:
         print("Direct compilation path found: compiling directly")
         direct_compiler = source_prog.get_direct_compiler(args['target-lang'])
         hardware_prog = direct_compiler.compile(source_prog, args['target-lang'])

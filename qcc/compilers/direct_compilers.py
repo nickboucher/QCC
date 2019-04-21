@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import qiskit
 
-import ibmq
-from interfaces import *
-from hardware import *
+import qcc.hardware.ibmq
+from qcc.interfaces import *
+from qcc.hardware import *
 
 ## TODO: complete and implement this set of compilers
 class QASM_IBM_Compiler(Compiler):

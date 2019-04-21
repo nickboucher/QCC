@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from interfaces import *
-from hardware import *
+from qcc.interfaces import *
+from qcc.hardware import *
 
 ## TODO: complete and implement this set of compilers
 class Intermediary_IBM_Compiler(Compiler):

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import qiskit
 
 backends = {}
@@ -25,4 +26,3 @@ def init_ibmq_accounts():
 
 def load_backends():
     return qiskit.IBMQ.backends()
-

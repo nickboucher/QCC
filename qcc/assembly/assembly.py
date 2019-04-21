@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 import qiskit
 
-import langs
-import direct_compilers, compilers_to_intermediary
-
-from interfaces import *
-
+import qcc.config
+import qcc.compilers.direct_compilers
+import qcc.compilers.compilers_to_intermediary
+from qcc.interfaces import *
 
 class QASM(AsmProgram):
     """ QCC Wrapper for QisKit's Python QASM representation """
@@ -19,7 +18,7 @@ class QASM(AsmProgram):
 
     @staticmethod
     def get_direct_compiler(target_lang):
-        if target_lang in langs.ibm_langs:
+        if target_lang in config.ibm_langs:
             return direct_compilers.QASM_IBM_Compiler()
         else:
             raise ValueError("Requested direct compiler does not exist.")
@@ -37,7 +36,7 @@ class Quil(AsmProgram):
 
     @staticmethod
     def get_direct_compiler(target_lang):
-        if target_lang in langs.rigetti_langs:
+        if target_lang in config.rigetti_langs:
             return direct_compilers.Quil_Rigetti_Compiler()
         else:
             raise ValueError("Requested direct compiler does not exist.")

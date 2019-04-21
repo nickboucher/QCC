@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from interfaces import *
+from qcc.interfaces import *
 
 # TODO -- Come up with actual list of hardwares and implement
 class IBM(HardwareContrainedProgram):

@@ -4,3 +4,5 @@
 # Example usage: sudo pip3 install -r requirements.txt
 #
 qiskit
+configparser
+pyquil
