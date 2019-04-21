@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
-import qiskit
-
 from qcc.compilers import direct_compilers
 from qcc import config
 from qcc.compilers import compilers_to_intermediary
 from qcc.interfaces import *
+from qiskit.qasm import Qasm
 
 class QASM(AsmProgram):
     """ QCC Wrapper for QisKit's Python QASM representation """
 
     def __init__(self, prog_str=""):
-        self.circuit = qiskit.QuantumCircuit.from_qasm_str(prog_str)
+        self.program = Qasm(data=prog_str).parse()
 
     @staticmethod
     def get_intermediary_compiler():
