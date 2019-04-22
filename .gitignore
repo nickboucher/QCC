@@ -124,3 +124,6 @@ dmypy.json
 
 # Mac Finder DB Files
 .DS_Store
+
+# ignore the venv
+qcc-venv
