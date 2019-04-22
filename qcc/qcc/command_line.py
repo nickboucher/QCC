@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import qcc.config as config
+import qcc
 
 def parse_cli_args():
     parser = argparse.ArgumentParser()
@@ -10,6 +11,9 @@ def parse_cli_args():
     return vars(parser.parse_args())
 
 def main():
+
+    # load languages
+    qcc.init()
 
     args = parse_cli_args()
 

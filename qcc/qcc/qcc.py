@@ -13,8 +13,8 @@ def create_source_prog(lang, source_file):
     elif lang == config.quil_lang:
         return Quil(prog_string)
 
-def compile(source_lang, target_lang, source_file):
 
+def init():
     ibmq.init()
     config.add_direct_compile(ibmq.backend_names, config.qasm_lang)
     config.add_ibm_langs(ibmq.backend_names)
@@ -23,6 +23,8 @@ def compile(source_lang, target_lang, source_file):
     config.add_direct_compile(rigetti.backend_names, config.quil_lang)
     config.add_rigetti_langs(rigetti.backend_names)
 
+
+def compile(source_lang, target_lang, source_file):
 
     print("Request: compile", source_lang, "to", target_lang)
     source_prog = create_source_prog(source_lang, source_file)
