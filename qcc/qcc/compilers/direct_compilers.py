@@ -11,7 +11,7 @@ class QASM_IBM_Compiler(Compiler):
 
     def compile(self, source, target_lang):
         ## TODO: Implement this
-        qiskit.compile(source.circuit, ibmq.backends[target_lang])
+        r = qiskit.compile(source.circuit, ibmq.backends[target_lang])
         return IBM("TODO(Juan)")
 
 class Quil_Rigetti_Compiler(Compiler):
