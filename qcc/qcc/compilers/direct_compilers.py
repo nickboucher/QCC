@@ -20,5 +20,4 @@ class Quil_Rigetti_Compiler(Compiler):
 
     def compile(self, source, target_lang):
         qc = get_qc(target_lang)
-        qc.compiler.quil_to_native_quil(source.program)
-        return Rigetti("TODO")
+        return qc.compiler.quil_to_native_quil(source.program)

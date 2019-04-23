@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import subprocess
-
 import qcc.config
 import qcc.hardware.ibmq
 import qcc.hardware.rigetti
