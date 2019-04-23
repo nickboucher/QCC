@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 from configparser import ConfigParser
-from os.path import exists
+from os.path import dirname, realpath, exists
 
 config = ConfigParser()
-if exists("config.ini"):
-    config.read("config.ini")
+config_file = f"{dirname(realpath(__file__))}/config.ini"
+if exists(config_file):
+    config.read(config_file)
+# Use default section keys
+config = config["DEFAULT"]
 
 
 qasm_lang = "qasm"
