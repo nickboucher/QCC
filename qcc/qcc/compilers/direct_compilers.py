@@ -5,13 +5,19 @@ from pyquil import get_qc
 import qcc.hardware.ibmq
 from qcc.interfaces import *
 from qcc.hardware import *
+import sys
 
 ## TODO: complete and implement this set of compilers
 class QASM_IBM_Compiler(Compiler):
     """ Compiles QASM to IBM """
 
     def compile(self, source, target_lang):
-        compiled_qobj = qiskit.compile(source.circuit, ibmq.backends[target_lang])
+        try:
+            compiled_qobj = qiskit.compile(source.circuit, ibmq.backends[target_lang])
+        except:
+            print("Failed to compile circuit to specified hardware", \
+                    file = sys.stderr)
+            sys.exit(1)
         ## TODO: It would be nice to use qiskit.converters.qobj_to_circuits
         ##       for this. Unfortunately their code throws an error when
         ##       I try to use it.
