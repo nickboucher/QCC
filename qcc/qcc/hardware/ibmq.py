@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import qiskit
+from qcc.config import config
 
 backends = {}
 backend_names = []
@@ -7,7 +8,7 @@ backend_names = []
 def init():
     global backends, backend_names
     print("Loading ibmqx account and information...")
-    qiskit.IBMQ.load_accounts()
+    qiskit.IBMQ.enable_account(config["IBMQ_API_TOKEN"])
 
     backend_objs = list(filter(filter_backend, load_backends()))
     backend_names = [b.name() for b in backend_objs]
