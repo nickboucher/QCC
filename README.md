@@ -6,9 +6,17 @@ This is the final project for Harvard's ES170.
 
 ## Installation
 
+### Install Pip Components
+
 In order to use any of the Python code in this repository, the package must be installed (preferably using `pip` instead of `easy_install`).
 
 If you are actively developing this package, be sure to install the package with the `-e` editable flag. For example, from the root directory of this repository:
 ```bash
 pip install -e qcc/
+```
+### Install Rigetti Components
+
+In order to use any QUIL functionality, you must also have the [Rigetti Forest SDK](https://www.rigetti.com/forest) installed. After that, you must run the following command in a separate terminal:
+```bash
+quilc -S
 ```
