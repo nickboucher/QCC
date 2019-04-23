@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import qiskit
+from pyquil import get_qc
 
 import qcc.hardware.ibmq
 from qcc.interfaces import *
@@ -18,5 +19,6 @@ class Quil_Rigetti_Compiler(Compiler):
     """ Compiles Quil to Rigetti """
 
     def compile(self, source, target_lang):
-        ## TODO: Implement this
+        qc = get_qc(target_lang)
+        qc.compiler.quil_to_native_quil(source.program)
         return Rigetti("TODO")

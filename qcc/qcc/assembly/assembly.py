@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+from pyquil.quil import Program
+
 from qcc.compilers import direct_compilers
 from qcc import config
 from qcc.compilers import compilers_to_intermediary
-from qcc.interfaces import *
+from qcc.interfaces import AsmProgram
 from qiskit.qasm import Qasm
 from qiskit import QuantumCircuit
 
@@ -30,8 +32,8 @@ class QASM(AsmProgram):
 class Quil(AsmProgram):
     """ QCC Wrapper for Rigetti's Python Quil representation """
 
-    def __init__(self, program=""):
-        self.program = program
+    def __init__(self, program_str=""):
+        self.program = Program(program_str)
 
     @staticmethod
     def get_intermediary_compiler():
