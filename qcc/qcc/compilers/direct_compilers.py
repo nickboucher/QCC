@@ -11,9 +11,17 @@ class QASM_IBM_Compiler(Compiler):
     """ Compiles QASM to IBM """
 
     def compile(self, source, target_lang):
-        ## TODO: Implement this
-        r = qiskit.compile(source.circuit, ibmq.backends[target_lang])
-        return IBM("TODO(Juan)")
+        compiled_qobj = qiskit.compile(source.circuit, ibmq.backends[target_lang])
+        ## TODO: It would be nice to use qiskit.converters.qobj_to_circuits
+        ##       for this. Unfortunately their code throws an error when
+        ##       I try to use it.
+        if len(compiled_qobj.experiments) != 1 \
+           or not compiled_qobj.experiments[0].header \
+           or not compiled_qobj.experiments[0].header.compiled_circuit_qasm:
+            raise ValueError("Compilation failed to produce valid result.")
+
+        compiled_qasm = compiled_qobj.experiments[0].header.compiled_circuit_qasm
+        return IBM(compiled_qasm)
 
 class Quil_Rigetti_Compiler(Compiler):
     """ Compiles Quil to Rigetti """
