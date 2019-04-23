@@ -24,9 +24,6 @@ def init():
     config.add_direct_compile(rigetti.backend_names, config.quil_lang)
     config.add_rigetti_langs(rigetti.backend_names)
 
-    # Initialize Rigetti local server
-    subprocess.Popen(['quilc', '-S'])
-
 
 def compile(source_lang, target_lang, source_file):
 
