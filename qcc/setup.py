@@ -11,6 +11,11 @@ setuptools.setup(
     entry_points = {
         'console_scripts': ['qcc=qcc.command_line:main'],
     },
+    install_requires = [
+        'qiskit',
+        'configparser',
+        'pyquil'
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
