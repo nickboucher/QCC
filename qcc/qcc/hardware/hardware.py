@@ -12,6 +12,11 @@ class IBM(HardwareContrainedProgram):
     def __str__(self):
         return self.program
 
+    def get_statistics(self):
+        # TODO: implement
+        pass
+
+
 class Rigetti(HardwareContrainedProgram):
     """ Represents a Rigetti quantum device """
 
@@ -21,3 +26,8 @@ class Rigetti(HardwareContrainedProgram):
 
     def __str__(self):
         return self.program
+
+    def get_statistics(self):
+        # TODO: implement
+        pass
+
