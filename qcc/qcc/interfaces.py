@@ -26,7 +26,12 @@ class AsmProgram(Program, ABC):
 class HardwareContrainedProgram(ABC):
   """ Represents a machine-language quantum program
   targeting specific hardware """
-  pass
+
+  @abstractmethod
+  def get_statistics():
+    """ Returns statistics about a hardware constrained program"""
+    pass
+
 
 class Compiler(ABC):
   """ Represents a compiler between two quantum languages """
