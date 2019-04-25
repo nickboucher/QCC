@@ -1,4 +1,4 @@
-class HardwareConstrainedProgramInfo(object):
+class HardwareConstrainedProgramInfo:
     def __init__(self, nlines):
         # TODO: determine what statistics we want to take in
         self.nlines = nlines
