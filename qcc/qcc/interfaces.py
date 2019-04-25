@@ -28,7 +28,7 @@ class HardwareContrainedProgram(ABC):
   targeting specific hardware """
 
   @abstractmethod
-  def get_statistics():
+  def get_statistics(self):
     """ Returns statistics about a hardware constrained program"""
     pass
 
