@@ -16,7 +16,6 @@ class QASM(AsmProgram):
         self.qasm_str = prog_str
         self.circuit = QuantumCircuit.from_qasm_str(self.qasm_str)
 
-
     @staticmethod
     def get_intermediary_compiler():
         return compilers_to_intermediary.QASM_Intermediary_Compiler()

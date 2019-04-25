@@ -5,12 +5,12 @@ from qcc.interfaces import *
 class IBM(HardwareContrainedProgram):
     """ Represents an IBM quantum device """
 
-    def __init__(self, program=""):
+    def __init__(self, circuit):
         ## TODO: Implement
-        self.program = program
+        self.program = circuit
 
     def __str__(self):
-        return self.program
+        return self.program.qasm()
 
     def get_statistics(self):
         # TODO: implement
@@ -20,12 +20,12 @@ class IBM(HardwareContrainedProgram):
 class Rigetti(HardwareContrainedProgram):
     """ Represents a Rigetti quantum device """
 
-    def __init__(self, program=""):
+    def __init__(self, quil_program):
         ## TODO: Implement
-        self.program = program
+        self.program = quil_program
 
     def __str__(self):
-        return self.program
+        return self.program.out()
 
     def get_statistics(self):
         # TODO: implement

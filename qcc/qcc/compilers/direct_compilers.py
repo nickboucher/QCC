@@ -26,12 +26,14 @@ class QASM_IBM_Compiler(Compiler):
            or not compiled_qobj.experiments[0].header.compiled_circuit_qasm:
             raise ValueError("Compilation failed to produce valid result.")
 
-        compiled_qasm = compiled_qobj.experiments[0].header.compiled_circuit_qasm
-        return IBM(compiled_qasm)
+        compiled_qasm_str = compiled_qobj.experiments[0].header.compiled_circuit_qasm
+        compiled_qasm_circuit = qiskit.QuantumCircuit.from_qasm_str(compiled_qasm_str)
+        return IBM(compiled_qasm_circuit)
 
 class Quil_Rigetti_Compiler(Compiler):
     """ Compiles Quil to Rigetti """
 
     def compile(self, source, target_lang):
         qc = get_qc(target_lang)
-        return qc.compiler.quil_to_native_quil(source.program)
+        compiled_quil = qc.compiler.quil_to_native_quil(source.program)
+        return Rigetti(compiled_quil)
