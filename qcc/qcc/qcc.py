@@ -12,7 +12,6 @@ def create_source_prog(lang, source_file):
     elif lang == config.quil_lang:
         return Quil(prog_string)
 
-
 def init():
     ibmq.init()
     config.add_direct_compile(ibmq.backend_names, config.qasm_lang)
