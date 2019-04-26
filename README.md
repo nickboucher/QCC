@@ -20,3 +20,13 @@ In order to use any QUIL functionality, you must also have the [Rigetti Forest S
 ```bash
 quilc -S
 ```
+
+## MyPy for Development ##
+
+You can perform type checking for this codebase using `mypy` with the following commands from the root repo directory:
+
+```
+pip install mypy
+export MYPYPATH="./stubs"
+mypy qcc/
+```
