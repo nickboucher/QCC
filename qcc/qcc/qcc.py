@@ -2,15 +2,18 @@
 import qcc.config
 import qcc.hardware.ibmq
 import qcc.hardware.rigetti
+from typing import IO
 from qcc.assembly import *
 from qcc.hardware import *
 
-def create_source_prog(lang, source_file):
+def create_source_prog(lang : str, source_file : IO[bytes]) -> AsmProgram:
     prog_string = source_file.read()
     if lang == config.qasm_lang:
         return QASM(prog_string)
     elif lang == config.quil_lang:
         return Quil(prog_string)
+    else:
+        raise ValueError("lang is not a valid language.")
 
 def init():
     ibmq.init()
