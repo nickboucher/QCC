@@ -14,7 +14,8 @@ setuptools.setup(
     install_requires = [
         'qiskit',
         'configparser',
-        'pyquil'
+        'pyquil',
+        'pyduktape'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
