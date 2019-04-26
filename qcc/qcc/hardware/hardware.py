@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-from qcc.interfaces import *
+from qcc.interfaces import HardwareContrainedProgram
+
 
 # TODO -- Come up with actual list of hardwares and implement
 class IBM(HardwareContrainedProgram):
     """ Represents an IBM quantum device """
 
     def __init__(self, circuit):
-        ## TODO: Implement
+        # TODO: Implement
         self.program = circuit
 
     def __str__(self):
@@ -21,7 +22,7 @@ class Rigetti(HardwareContrainedProgram):
     """ Represents a Rigetti quantum device """
 
     def __init__(self, quil_program):
-        ## TODO: Implement
+        # TODO: Implement
         self.program = quil_program
 
     def __str__(self):
@@ -30,4 +31,3 @@ class Rigetti(HardwareContrainedProgram):
     def get_statistics(self):
         # TODO: implement
         pass
-

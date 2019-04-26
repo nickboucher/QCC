@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-import qcc.config
+from qcc.config import config
 import qcc.hardware.ibmq
 import qcc.hardware.rigetti
-from qcc.assembly import *
-from qcc.hardware import *
+from qcc.assembly import QASM, Quil
+from qcc.hardware import ibmq, rigetti
+
 
 def create_source_prog(lang, source_file):
     prog_string = source_file.read()
@@ -33,10 +34,16 @@ def compile(source_lang, target_lang, source_file):
         direct_compiler = source_prog.get_direct_compiler(target_lang)
         hardware_prog = direct_compiler.compile(source_prog, target_lang)
     else:
-        print("No direct compilation path found: compiling through intermediary language")
+        print("No direct compilation path found: compiling through"
+              "intermediary language")
         intermediary_compiler = source_prog.get_intermediary_compiler()
-        intermediary_prog = intermediary_compiler.compile(source_prog, target_lang)
-        hardware_compiler = intermediary_prog.get_hardware_compiler(target_lang)
-        hardware_prog = hardware_compiler.compile(intermediary_prog, target_lang)
+        intermediary_prog = intermediary_compiler.compile(
+            source_prog,
+            target_lang)
+        hardware_compiler = intermediary_prog.get_hardware_compiler(
+            target_lang)
+        hardware_prog = hardware_compiler.compile(
+            intermediary_prog,
+            target_lang)
 
     return hardware_prog

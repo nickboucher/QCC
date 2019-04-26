@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 class HardwareConstrainedProgramInfo:
     def __init__(self, nlines):
         # TODO: determine what statistics we want to take in
