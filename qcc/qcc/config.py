@@ -2,12 +2,12 @@
 from configparser import ConfigParser
 from os.path import dirname, realpath, exists
 
-config = ConfigParser()
+config_parser = ConfigParser()
 config_file = f"{dirname(realpath(__file__))}/config.ini"
 if exists(config_file):
-    config.read(config_file)
+    config_parser.read(config_file)
 # Use default section keys
-config = config["DEFAULT"]
+config = config_parser["DEFAULT"]
 
 
 qasm_lang = "qasm"
