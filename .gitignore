@@ -127,3 +127,6 @@ dmypy.json
 
 # ignore the venv
 qcc-venv
+
+# ingnore mypi local config files
+mypy.ini

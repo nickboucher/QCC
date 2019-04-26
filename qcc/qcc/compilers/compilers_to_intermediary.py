@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 import pyduktape
+import qcc.assembly
 from os.path import dirname, realpath, exists
 from qcc.interfaces import Compiler
 from qcc.intermediary_lang import IntermediaryProgram
-from qcc.assembly import QASM, Quil
 
 
 class QASM_Intermediary_Compiler(Compiler):
@@ -19,7 +20,7 @@ class QASM_Intermediary_Compiler(Compiler):
         else:
             raise FileNotFoundError("Missing qc.js dependency.")
 
-    def compile(self, source: QASM) -> IntermediaryProgram:
+    def compile(self, source: qcc.assembly.QASM) -> IntermediaryProgram:
         # Implement this
         return IntermediaryProgram("TODO")
 
@@ -27,6 +28,6 @@ class QASM_Intermediary_Compiler(Compiler):
 class Quil_Intermediary_Compiler(Compiler):
     """ Compiles Quil to Intermediary Language """
 
-    def compile(self, source: Quil) -> IntermediaryProgram:
+    def compile(self, source: qcc.assembly.Quil) -> IntermediaryProgram:
         # Implement this
         return IntermediaryProgram("TODO")

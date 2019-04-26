@@ -37,7 +37,7 @@ class Compiler(ABC):
   """ Represents a compiler between two quantum languages """
 
   @abstractmethod
-  def compile(self, source, target_lang=None):
+  def compile(self, source):
     """ Returns a program compiled from the source language
     to the target languange """
     pass
