@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import qiskit
+from typing import List
 from qcc.config import config
 
 backends = {}
-backend_names = []
+backend_names : List[str] = []
 
 def init():
     global backends, backend_names
