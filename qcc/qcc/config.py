@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from configparser import ConfigParser
 from os.path import dirname, realpath, exists
+from typing import List, Dict
 
 config_parser = ConfigParser()
 config_file = f"{dirname(realpath(__file__))}/config.ini"
@@ -13,14 +14,14 @@ config = config_parser["DEFAULT"]
 qasm_lang = "qasm"
 quil_lang = "quil"
 
-asm_langs = [qasm_lang, quil_lang]
-ibm_langs = []
-rigetti_langs = []
-hw_langs = []
+asm_langs : List[str] = [qasm_lang, quil_lang]
+ibm_langs : List[str] = []
+rigetti_langs : List[str] = []
+hw_langs : List[str] = []
 
 # load ibm hardware from IBM backends
 
-direct_compile_from = {
+direct_compile_from : Dict[str, str] = {
 }
 
 # add mapping from a list of hardwares to a source language. Currently in
