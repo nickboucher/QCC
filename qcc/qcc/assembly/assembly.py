@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from pyquil.quil import Program
+from pyquil import Program
 
 from qcc.compilers import direct_compilers
 from qcc import config
