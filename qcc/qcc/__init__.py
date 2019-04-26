@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import pkgutil
+from typing import Iterable
 
-__path__ = pkgutil.extend_path(__path__, __name__)
+__path__ : Iterable[str] = pkgutil.extend_path(__path__, __name__)
 
 from qcc.qcc import *

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from pyquil import Program
+import pyquil
 
 from qcc.compilers import direct_compilers
 from qcc import config
@@ -32,7 +32,7 @@ class Quil(AsmProgram):
     """ QCC Wrapper for Rigetti's Python Quil representation """
 
     def __init__(self, program_str=""):
-        self.program = Program(program_str)
+        self.program = pyquil.Program(program_str)
 
     @staticmethod
     def get_intermediary_compiler():

@@ -1,0 +1,2 @@
+class QuantumCircuit:
+    pass
