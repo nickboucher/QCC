@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
+from qcc.assembly.quil import Quil
 from qcc.config import config
 from qcc.interfaces import Program
 from qcc.compilers.compilers_from_intermediary import Intermediary_IBM_Compiler
 
 
 class IntermediaryProgram(Program):
-    """ Represents intermediary program used in compiling """
+    """ Represents intermediary program used in compiling as a Quil Program"""
 
-    def __init__(self, program=""):
+    def __init__(self, quil: Quil = None):
         """ Instantiate a new Intermediary Program """
-        self.program = program
+        self.quil = quil
 
     def get_hardware_compiler(self, target_lang):
         """ Return Compiler from Intermediary Program to the
