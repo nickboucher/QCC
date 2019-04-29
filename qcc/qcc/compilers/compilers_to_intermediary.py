@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-from __future__ import annotations
+
+# remove for python 3.6
+# from future import annotations
 import pyduktape
 import qcc.assembly
 from os.path import dirname, realpath, exists
@@ -20,7 +22,9 @@ class QASM_Intermediary_Compiler(Compiler):
         else:
             raise FileNotFoundError("Missing qc.js dependency.")
 
-    def compile(self, source: qcc.assembly.QASM) -> IntermediaryProgram:
+    def compile(self, source):
+        # removed type annotation for python 3.6
+        # def compile(self, source: qcc.assembly.QASM): #  -> IntermediaryProgram:
         self.js_ctx.set_globals(qasm=source.program.qasm())
         quil_str = self.js_ctx.eval_js(
             "var circuit = new QuantumCircuit();"
@@ -44,5 +48,6 @@ class Quil_Intermediary_Compiler(Compiler):
     def __init__(self):
         pass
 
-    def compile(self, source: qcc.assembly.Quil) -> IntermediaryProgram:
+    def compile(self, source):
+        # def compile(self, source: qcc.assembly.Quil) -> IntermediaryProgram
         return IntermediaryProgram(quil=source)
