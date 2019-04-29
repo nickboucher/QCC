@@ -23,7 +23,7 @@ class AsmProgram(Program, ABC):
     """ Returns a direct compiler from this language to target_lang """
     pass
 
-class HardwareContrainedProgram(ABC):
+class HardwareConstrainedProgram(ABC):
   """ Represents a machine-language quantum program
   targeting specific hardware """
 

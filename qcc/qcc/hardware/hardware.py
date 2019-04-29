@@ -2,7 +2,7 @@
 from qcc.interfaces import *
 
 # TODO -- Come up with actual list of hardwares and implement
-class IBM(HardwareContrainedProgram):
+class IBM(HardwareConstrainedProgram):
     """ Represents an IBM quantum device """
 
     def __init__(self, circuit):
@@ -17,7 +17,7 @@ class IBM(HardwareContrainedProgram):
         pass
 
 
-class Rigetti(HardwareContrainedProgram):
+class Rigetti(HardwareConstrainedProgram):
     """ Represents a Rigetti quantum device """
 
     def __init__(self, quil_program):
