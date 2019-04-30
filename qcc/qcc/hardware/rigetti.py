@@ -2,7 +2,7 @@
 import pyquil
 from typing import List
 
-backend_names : List[str] = []
+backend_names: List[str] = []
 
 
 def init():

@@ -4,7 +4,7 @@ from typing import List
 from qcc.config import config
 
 backends = {}
-backend_names : List[str] = []
+backend_names: List[str] = []
 
 
 def init():
