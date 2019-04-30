@@ -15,7 +15,6 @@ class IBM(HardwareConstrainedProgram):
         return self.program.qasm()
 
     def get_statistics(self) -> HardwareConstrainedProgramInfo:
-        # TODO: implement
         return HardwareConstrainedProgramInfo(num_insts=self.program.size())
 
 
@@ -29,6 +28,6 @@ class Rigetti(HardwareConstrainedProgram):
     def __str__(self):
         return self.program.out()
 
-    def get_statistics(self):
-        # TODO: implement
-        pass
+    def get_statistics(self) -> HardwareConstrainedProgramInfo:
+        insts = self.program.instructions
+        return HardwareConstrainedProgramInfo(num_insts=len(insts))
