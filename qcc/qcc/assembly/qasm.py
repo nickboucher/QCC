@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
+from qiskit.qasm import Qasm
+from qiskit import QuantumCircuit
+
 from qcc import config
 from qcc.compilers import direct_compilers
 from qcc.compilers import compilers_to_intermediary
 from qcc.interfaces import AsmProgram
-from qiskit.qasm import Qasm
-from qiskit import QuantumCircuit
-
 
 class QASM(AsmProgram):
     """ QCC Wrapper for QisKit's Python QASM representation """

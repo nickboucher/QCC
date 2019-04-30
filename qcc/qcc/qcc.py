@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
+from typing import IO
+
 import qcc.config
 import qcc.hardware.ibmq
 import qcc.hardware.rigetti
-from typing import IO
 from qcc.assembly import QASM, Quil
 from qcc.hardware import ibmq, rigetti
 from qcc.interfaces import AsmProgram, Compiler, HardwareConstrainedProgram

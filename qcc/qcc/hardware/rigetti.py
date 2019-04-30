@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import pyquil
 from typing import List
+
+import pyquil
 
 backend_names: List[str] = []
 

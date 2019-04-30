@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-import qiskit
 from typing import List
+
+import qiskit
+
 from qcc.config import config
 
 backends = {}

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-
+from os.path import dirname, realpath, exists
 # remove for python 3.6
 # from future import annotations
+
 import pyduktape
+
 import qcc.assembly
-from os.path import dirname, realpath, exists
 from qcc.interfaces import Compiler
 from qcc.intermediary_lang import IntermediaryProgram
 
