@@ -2,8 +2,6 @@
 from typing import IO
 
 import qcc.config
-import qcc.hardware.ibmq
-import qcc.hardware.rigetti
 from qcc.assembly import QASM, Quil
 from qcc.hardware import ibmq, rigetti
 from qcc.interfaces import AsmProgram, Compiler, HardwareConstrainedProgram
