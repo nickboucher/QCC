@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from qcc.assembly.quil import Quil
-from qcc.config import config
+from qcc import config
 from qcc.interfaces import Program
 from qcc.compilers.compilers_from_intermediary import Intermediary_IBM_Compiler
 

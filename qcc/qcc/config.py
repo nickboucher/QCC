@@ -20,8 +20,7 @@ hw_langs = []
 
 # load ibm hardware from IBM backends
 
-direct_compile_from = {
-}
+direct_compile_from = {}
 
 
 # add mapping from a list of hardwares to a source language. Currently in
