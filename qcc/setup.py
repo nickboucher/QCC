@@ -8,16 +8,19 @@ setuptools.setup(
     long_description="Cross-compiles quantum assembly codes",
     url="https://github.com/nickboucher/QCC",
     packages=setuptools.find_packages(),
-    entry_points = {
+    entry_points={
         'console_scripts': ['qcc=qcc.command_line:main'],
     },
-    install_requires = [
+    install_requires=[
         'qiskit',
         'configparser',
-        'pyquil'
+        'pyquil',
+        'pyduktape',
+        'numpy'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
+    include_package_data=True
 )

@@ -11,5 +11,6 @@ def setup(
         packages : List[str],
         entry_points : Dict[str, List[str]],
         install_requires : List[str],
-        classifiers : List[str]
+        classifiers : List[str],
+        include_package_data : bool
 ) -> None: ...
