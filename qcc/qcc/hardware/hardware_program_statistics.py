@@ -2,10 +2,10 @@
 
 
 class HardwareConstrainedProgramInfo:
-    def __init__(self, nlines):
+    def __init__(self, num_insts):
         # TODO: determine what statistics we want to take in
-        self.nlines = nlines
+        self.num_insts = num_insts
         pass
 
     def __str__(self):
-        return "number of lines: {}".format(self.nlines)
+        return "Number of instructions: {}".format(self.num_insts)
