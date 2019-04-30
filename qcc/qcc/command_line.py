@@ -7,7 +7,7 @@ import qcc
 def parse_cli_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('source-lang', choices=config.asm_langs)
-    parser.add_argument('target-lang', choices=config.hw_langs)
+    parser.add_argument('--target-lang', dest='target-lang', choices=config.hw_langs)
     parser.add_argument(
         'source-file',
         type=argparse.FileType(mode='r', encoding='utf-8'))
@@ -18,7 +18,11 @@ def parse_cli_args():
         const=True,
         default=False,
         help='Print statistics about program rather than source')
-    return vars(parser.parse_args())
+    args = vars(parser.parse_args())
+    if 'target-lang' not in args:
+        parser.error("--target-lang required")
+
+    return args
 
 
 def main():
