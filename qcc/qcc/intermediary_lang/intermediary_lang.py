@@ -2,7 +2,8 @@
 import qcc.config
 from qcc.assembly.quil import Quil
 from qcc.interfaces import Program
-from qcc.compilers.compilers_from_intermediary import Intermediary_IBM_Compiler
+from qcc.compilers.compilers_from_intermediary import \
+    Intermediary_IBM_Compiler, Intermediary_Rigetti_Compiler
 
 
 class IntermediaryProgram(Program):
@@ -19,5 +20,7 @@ class IntermediaryProgram(Program):
             raise ValueError("target_lang must be a valid hardware language")
         if target_lang in qcc.config.ibm_langs:
             return Intermediary_IBM_Compiler()
+        elif target_lang in qcc.config.rigetti_langs:
+            return Intermediary_Rigetti_Compiler()
         else:
             raise ValueError("Requested compiler does not exist.")

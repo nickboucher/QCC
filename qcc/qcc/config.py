@@ -21,8 +21,7 @@ hw_langs : List[str] = []
 
 # load ibm hardware from IBM backends
 
-direct_compile_from : Dict[str, str] = {
-}
+direct_compile_from : Dict[str, str] = {}
 
 
 # add mapping from a list of hardwares to a source language. Currently in
