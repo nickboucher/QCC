@@ -30,4 +30,7 @@ def main():
         args['target-lang'],
         args['source-file'])
 
-    print("Result below:", prog, sep='\n')
+    if args['print_stats']:
+        print("Result below:", prog.get_statistics(), sep='\n')
+    else:
+        print("Result below:", prog, sep='\n')
