@@ -51,13 +51,17 @@ def compile(source_lang: str, target_lang: str, source_file: IO[str]) -> Hardwar
     source_prog: AsmProgram = create_source_prog(source_lang, source_file)
     return compile_from_program(source_lang, target_lang, source_prog)
 
-def get_profiles(source_lang: str, source_file: IO[str]) -> List[Tuple[str, HardwareConstrainedProgramInfo]]:
+def compile_all(source_lang: str, source_file: IO[str]) -> List[Tuple[str, HardwareConstrainedProgram]]:
     source_prog : AsmProgram = create_source_prog(source_lang, source_file)
-    profiles: List[Tuple[str, HardwareConstrainedProgramInfo]] = []
+    results: List[Tuple[str, HardwareConstrainedProgram]] = []
     for target_lang in qcc.config.hw_langs:
         try:
             prog = compile_from_program(source_lang, target_lang, source_prog)
-            profiles.append((target_lang, prog.get_statistics()))
+            results.append((target_lang, prog))
         except:
             pass
-    return profiles
+    return results
+
+def get_profiles(source_lang: str, source_file: IO[str]) -> List[Tuple[str, HardwareConstrainedProgramInfo]]:
+    compilations = compile_all(source_lang, source_file)
+    return [(target, prog.get_statistics()) for (target, prog) in compilations]
