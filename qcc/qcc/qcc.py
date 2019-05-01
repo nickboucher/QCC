@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-from typing import IO
+from typing import IO, List, Tuple
 
 import qcc.config
 from qcc.assembly import QASM, Quil
 from qcc.hardware import ibmq, rigetti
+from qcc.hardware.hardware_program_statistics import HardwareConstrainedProgramInfo
 from qcc.interfaces import AsmProgram, Compiler, HardwareConstrainedProgram
 from qcc.intermediary_lang import IntermediaryProgram
 
@@ -26,10 +27,7 @@ def init() -> None:
     qcc.config.add_rigetti_langs(rigetti.backend_names)
 
 
-def compile(source_lang: str, target_lang: str, source_file: IO[str]) -> HardwareConstrainedProgram:
-    print("Request: compile", source_lang, "to", target_lang)
-    source_prog: AsmProgram = create_source_prog(source_lang, source_file)
-
+def compile_from_program(source_lang: str, target_lang: str, source_prog: AsmProgram) -> HardwareConstrainedProgram:
     if qcc.config.direct_compile_from[target_lang] == source_lang:
         print("Direct compilation path found: compiling directly")
         direct_compiler: Compiler = source_prog.get_direct_compiler(target_lang)
@@ -47,3 +45,19 @@ def compile(source_lang: str, target_lang: str, source_file: IO[str]) -> Hardwar
             target_lang)
 
     return hardware_prog
+
+def compile(source_lang: str, target_lang: str, source_file: IO[str]) -> HardwareConstrainedProgram:
+    print("Request: compile", source_lang, "to", target_lang)
+    source_prog: AsmProgram = create_source_prog(source_lang, source_file)
+    return compile_from_program(source_lang, target_lang, source_prog)
+
+def get_profiles(source_lang: str, source_file: IO[str]) -> List[Tuple[str, HardwareConstrainedProgramInfo]]:
+    source_prog : AsmProgram = create_source_prog(source_lang, source_file)
+    profiles: List[Tuple[str, HardwareConstrainedProgramInfo]] = []
+    for target_lang in qcc.config.hw_langs:
+        try:
+            prog = compile_from_program(source_lang, target_lang, source_prog)
+            profiles.append((target_lang, prog.get_statistics()))
+        except:
+            pass
+    return profiles

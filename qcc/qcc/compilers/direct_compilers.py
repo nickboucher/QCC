@@ -16,10 +16,7 @@ class QASM_IBM_Compiler(Compiler):
                 source.circuit,
                 ibmq.backends[target_lang])
         except:
-            print(
-                "Failed to compile circuit to specified hardware",
-                file=sys.stderr)
-            sys.exit(1)
+            raise ValueError("Failed to compile circuit to specified hardware")
         # TODO: It would be nice to use qiskit.converters.qobj_to_circuits
         #       for this. Unfortunately their code throws an error when
         #       I try to use it.

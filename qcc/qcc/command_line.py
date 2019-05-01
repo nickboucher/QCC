@@ -46,4 +46,8 @@ def main():
         else:
             print("Result below:", prog, sep='\n')
     elif args['profiles']:
-        print("TODO")
+        print("Profiles below:")
+        profiles = qcc.get_profiles(args['source-lang'], args['source-file'])
+        for target, stats in profiles:
+            print("*" * 10, target, "*" * 10)
+            print(stats)
