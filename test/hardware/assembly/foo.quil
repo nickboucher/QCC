@@ -1,0 +1,8 @@
+DECLARE ro BIT[2]
+
+I 0
+X 0
+RX(pi) 0
+CNOT 1 4
+ISWAP 0 1
+MEASURE 0
