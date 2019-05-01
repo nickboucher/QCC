@@ -19,10 +19,11 @@ def parse_cli_args():
         action='store_true',
         help='Print statistics about program rather than source')
     parser.add_argument('--target-lang', dest='target-lang', choices=config.hw_langs)
+    parser.add_argument('--auto-target', dest='auto-target', action='store_true')
     parser.add_argument('--profiles', action='store_true')
     args = vars(parser.parse_args())
-    if not exactly_one_true(args['target-lang'] is not None, args['profiles']):
-        parser.error("Must choose exactly one of {--target-lang, --profiles}")
+    if not exactly_one_true(args['target-lang'] is not None, args['profiles'], args['auto-target']):
+        parser.error("Must choose exactly one of {--target-lang, --auto-target, --profiles}")
     if args['profiles'] and args['print_stats']:
         parser.error("Cannot use --stats flag with --profiles")
 
@@ -49,3 +50,5 @@ def main():
         for target, stats in profiles:
             print("*" * 10, target, "*" * 10)
             print(stats)
+    elif args['auto-target']:
+        print("TODO")
