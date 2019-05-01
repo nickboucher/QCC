@@ -16,9 +16,7 @@ def parse_cli_args():
     parser.add_argument(
         '--stats',
         dest='print_stats',
-        action='store_const',
-        const=True,
-        default=False,
+        action='store_true',
         help='Print statistics about program rather than source')
     parser.add_argument('--target-lang', dest='target-lang', choices=config.hw_langs)
     parser.add_argument('--profiles', action='store_true')
