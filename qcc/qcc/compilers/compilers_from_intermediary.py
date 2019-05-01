@@ -10,8 +10,10 @@ from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
 class Intermediary_IBM_Compiler(Compiler):
     """ Compiles Intermediary Language to IBM """
 
+    # TODO: Clean up style!
     def compile(self, source, target_lang):
-        # TODO: Move any functionality that depends on implementation out.
+        # TODO: Move any functionality out that depends on the specific
+        # implementation of the intermediary language.
         program = source.quil.program
         instructions = program.instructions
 
@@ -20,7 +22,7 @@ class Intermediary_IBM_Compiler(Compiler):
             raise ValueError("The Quil program is not a ProtoQuil program.")
 
         # TODO: Deal with DEFGATEs.
-        # TODO: Deal with gate modifiers (DAGGER AND CONTROLLED).
+        # TODO: Deal with gate modifiers (DAGGER and CONTROLLED).
         defined_gate_map = self._construct_defined_gate_map(
             program.defined_gates
         )
