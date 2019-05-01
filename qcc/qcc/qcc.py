@@ -65,3 +65,14 @@ def compile_all(source_lang: str, source_file: IO[str]) -> List[Tuple[str, Hardw
 def get_profiles(source_lang: str, source_file: IO[str]) -> List[Tuple[str, HardwareConstrainedProgramInfo]]:
     compilations = compile_all(source_lang, source_file)
     return [(target, prog.get_statistics()) for (target, prog) in compilations]
+
+def compile_to_auto_target(source_lang : str, source_file: IO[str]) -> Tuple[str, HardwareConstrainedProgram]:
+    """
+    Returns compilation to target language that produces the best result,
+    along with the target language used for this compilation
+    """
+    compilations = compile_all(source_lang, source_file)
+    def score(target_prog_pair):
+        target, prog = target_prog_pair
+        return (target, prog.get_statistics().score())
+    return min(compilations, key=score)

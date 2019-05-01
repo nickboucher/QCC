@@ -51,4 +51,9 @@ def main():
             print("*" * 10, target, "*" * 10)
             print(stats)
     elif args['auto-target']:
-        print("TODO")
+        target, prog = qcc.compile_to_auto_target(args['source-lang'], args['source-file'])
+        print("Chosen target:", target)
+        if args['print_stats']:
+            print("Result below:", prog.get_statistics(), sep='\n')
+        else:
+            print("Result below:", prog, sep='\n')
