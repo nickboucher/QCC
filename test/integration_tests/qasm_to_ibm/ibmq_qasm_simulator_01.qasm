@@ -1,4 +1,3 @@
-Loading ibmqx account and information...
 Request: compile qasm to ibmq_qasm_simulator
 Direct compilation path found: compiling directly
 Result below:

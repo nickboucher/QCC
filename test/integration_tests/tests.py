@@ -5,7 +5,8 @@ from util import Capturing
 import qcc.command_line
 
 class IntegrationTests(unittest.TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpClass(self):
         self.my_path = os.path.abspath(os.path.dirname(__file__))
         resources_path = os.path.join(self.my_path, "../resources/")
         src_qasm_path = os.path.join(resources_path, "qasm")
@@ -22,6 +23,8 @@ class IntegrationTests(unittest.TestCase):
             src_num = os.path.splitext(filename)[0].split("_")[1]
             filepath = os.path.join(src_quil_path, filename)
             self.src_quil[src_num] = filepath
+
+        qcc.init()
 
     def directory_tester(self, source_lang, expected_output_dir_name, sources):
         """
@@ -40,7 +43,7 @@ class IntegrationTests(unittest.TestCase):
             trgt = '_'.join(namesplit[:-1])
             src_num = namesplit[-1]
             with Capturing() as actual_output:
-                qcc.command_line.main([source_lang, sources[src_num], "--target-lang", trgt])
+                qcc.command_line.main(False, [source_lang, sources[src_num], "--target-lang", trgt])
             actual_output_str = '\n'.join(actual_output)
             with open(filepath, 'r') as f:
                 expected_output_str = f.read() + '\n'

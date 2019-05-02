@@ -30,10 +30,11 @@ def parse_cli_args(args=None):
     return args
 
 
-def main(args=None):
+def main(should_init=True, input_args=None):
     # load languages
-    qcc.init()
-    args = parse_cli_args(args)
+    if should_init:
+        qcc.init()
+    args = parse_cli_args(input_args)
     if args['target-lang'] is not None:
         prog = qcc.compile(
             args['source-lang'],
