@@ -1,5 +1,10 @@
 DECLARE ro BIT[2]
 
+DEFGATE FOO:
+    1, 0
+    0, -1
+
+FOO 2
 I 0
 X 0
 RX(pi) 0

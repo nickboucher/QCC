@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy
-from pyquil import get_qc
+from pyquil import Program, get_qc
 from pyquil.quilbase import Declare, Gate, Halt, Measurement, Pragma, \
     Reset, ResetQubit
 from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
@@ -28,8 +28,6 @@ class Intermediary_IBM_Compiler(Compiler):
         if not program.is_protoquil():
             raise ValueError("The Quil program is not a ProtoQuil program.")
 
-        # TODO: Deal with DEFGATEs.
-        # TODO: Deal with gate modifiers (DAGGER and CONTROLLED).
         defined_gate_map = self._construct_defined_gate_map(
             program.defined_gates
         )
@@ -57,6 +55,9 @@ class Intermediary_IBM_Compiler(Compiler):
             quantum_register_map,
             defined_gate_map
         )
+
+        # TODO: Remove this print statement.
+        print(circuit.qasm())
 
         compiled_circuit = self._compile_circuit(circuit, target_lang)
         return IBM(compiled_circuit)
@@ -201,15 +202,40 @@ class Intermediary_IBM_Compiler(Compiler):
             elif isinstance(instr, (Declare, Pragma)):
                 continue
             elif isinstance(instr, Gate):
-                if instr.name in dg_map.keys():
-                    raise ValueError("TODO: Implement defined gates.")
-
                 if len(instr.modifiers) >= 1:
                     raise ValueError("TODO: Incorporate gate modifiers.")
 
-                self._transpile_standard_gate(qrs, circ, instr, qr_map)
+                if instr.name in dg_map.keys():
+                    self._transpile_defined_gate(
+                        crs, qrs, circ, instr, cr_map, qr_map, dg_map
+                    )
+                else:
+                    self._transpile_standard_gate(qrs, circ, instr, qr_map)
             else:
                 raise ValueError("The program is not a ProtoQuil program.")
+
+    def _transpile_defined_gate(self, crs, qrs, circ, instr,
+                                cr_map, qr_map, dg_map):
+        """
+        Transpile a defined gate using the decomposer built into the Quil
+        compiler.
+        """
+
+        definition = dg_map[instr.name]
+
+        # Create a small program with the single instruction
+        p = Program()
+        p += definition
+        p += instr
+
+        max_qubit = max([qubit.index for qubit in instr.qubits])
+        qc = get_qc("%sq-qvm" % (max_qubit + 1))
+        decomposition = qc.compiler.quil_to_native_quil(p)
+
+        decomp_insts = decomposition.instructions
+        self._transpile_instructions(
+            crs, qrs, circ, decomp_insts, cr_map, qr_map, dg_map
+        )
 
     @staticmethod
     def _transpile_standard_gate(qrs, circ, instr, qr_map):
@@ -299,7 +325,7 @@ class Intermediary_IBM_Compiler(Compiler):
 class Intermediary_Rigetti_Compiler(Compiler):
     """ Compiles Intermediary Language to Rigetti """
 
-    # TODO: Test once we set up the Rigetti account.
+    # TODO: Verify once we set up the Rigetti account.
     @staticmethod
     def compile(source, target_lang):
         """ Compile from the intermediary language to a Quil program. """
