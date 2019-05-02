@@ -21,7 +21,7 @@ class Quil_QASM_Transpiler:
 
         # TODO: Expand from ProtoQuil programs to anything IBM can handle,
         #   namely DEFCIRCUITs and IFs. Note, however, that PyQuil does not
-        #   parse DEFCIRCUIT statements.
+        #   give users a way to write DEFCIRCUIT statements.
         if not program.is_protoquil():
             raise ValueError("The Quil program is not a ProtoQuil program.")
 
@@ -200,28 +200,37 @@ class Quil_QASM_Transpiler:
                         crs, qrs, circ, instr, cr_map, qr_map, dg_map
                     )
                 else:
+                    # TODO: Find a better way to decompose a modified
+                    #   standard gate.
                     if len(instr.modifiers) >= 1:
-                        raise ValueError(
-                            "TODO: Gate modifiers with standard gates."
+                        self._transpile_via_native_quil(
+                            crs, qrs, circ, cr_map, qr_map, dg_map, instr
                         )
 
                     self._transpile_standard_gate(qrs, circ, instr, qr_map)
             else:
                 raise ValueError("The program is not a ProtoQuil program.")
 
-    # TODO: Is this the best way to decompose a user-defined gate?
+    # TODO: Is this the best way to decompose an arbitrary user-defined gate?
     def _transpile_defined_gate(self, crs, qrs, circ, instr,
                                 cr_map, qr_map, dg_map):
-        """
-        Transpile a defined gate using the decomposer built into the Quil
-        compiler.
-        """
+        """ Transpile a user-defined gate. """
 
         definition = dg_map[instr.name]
+        self._transpile_via_native_quil(
+            crs, qrs, circ, cr_map, qr_map, dg_map, instr, definition
+        )
 
+    def _transpile_via_native_quil(self, crs, qrs, circ, cr_map, qr_map,
+                                   dg_map, instr, definition=None):
+        """
+        Transpile an instruction using the Quil compiler; harnesses the power
+        of the built-in gate decomposer.
+        """
         # Create a small Quil program with the single instruction
         invocation = Program()
-        invocation += definition
+        if definition:
+            invocation += definition
         invocation += instr
 
         max_qubit = max([qubit.index for qubit in instr.qubits])
