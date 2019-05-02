@@ -23,17 +23,34 @@ class IntegrationTests(unittest.TestCase):
             filepath = os.path.join(src_quil_path, filename)
             self.src_quil[src_num] = filepath
 
-    def test_quil_to_rigetti(self):
-        output_path = os.path.join(self.my_path, "quil_to_rigetti")
+    def directory_tester(self, source_lang, expected_output_dir_name, sources):
+        """
+        Check that each expected output in the given directory
+            matches the actual output on the corresponding input.
+        Assumes directory is flat and contains files of the form
+            [target_lang]_[test_num].*
+        Uses [target_lang] for target language, and src_[test_num]
+            for source file
+        sources should be a map like self.src_qasm or self.src_quil
+        """
+        output_path = os.path.join(self.my_path, expected_output_dir_name)
         for filename in os.listdir(output_path):
             filepath = os.path.join(output_path, filename)
-            trgt, src_num = os.path.splitext(filename)[0].split("_")
+            namesplit = os.path.splitext(filename)[0].split("_")
+            trgt = '_'.join(namesplit[:-1])
+            src_num = namesplit[-1]
             with Capturing() as actual_output:
-                qcc.command_line.main(["quil", self.src_quil[src_num], "--target-lang", trgt])
+                qcc.command_line.main([source_lang, sources[src_num], "--target-lang", trgt])
             actual_output_str = '\n'.join(actual_output)
             with open(filepath, 'r') as f:
                 expected_output_str = f.read() + '\n'
                 self.assertEqual(actual_output_str, expected_output_str)
+
+    def test_quil_to_rigetti(self):
+        self.directory_tester("quil", "quil_to_rigetti", self.src_quil)
+
+    def test_qasm_to_ibm(self):
+        self.directory_tester("qasm", "qasm_to_ibm", self.src_qasm)
 
 if __name__ == '__main__':
     unittest.main()
