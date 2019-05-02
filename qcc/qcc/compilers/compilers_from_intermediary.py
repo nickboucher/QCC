@@ -269,4 +269,4 @@ class Intermediary_Rigetti_Compiler(Compiler):
     """ Compiles Intermediary Language to Rigetti """
 
     def compile(self, source, target_lang):
-        return Rigetti("TODO")
+        return Rigetti(source.quil.program)
