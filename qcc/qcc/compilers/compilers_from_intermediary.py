@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-from numpy import pi
+import numpy
+import qiskit
+
 from qcc.interfaces import Compiler
-from qcc.hardware import IBM, Rigetti
+from qcc.hardware import IBM, Rigetti, ibmq
 from pyquil.quilbase import Declare, Gate, Halt, Measurement, Pragma, \
     Reset, ResetQubit
 from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
@@ -12,6 +14,8 @@ class Intermediary_IBM_Compiler(Compiler):
 
     # TODO: Clean up style!
     def compile(self, source, target_lang):
+        """ Compile from the intermediary language to QASM. """
+
         # TODO: Move any functionality out that depends on the specific
         # implementation of the intermediary language.
         program = source.quil.program
@@ -37,8 +41,8 @@ class Intermediary_IBM_Compiler(Compiler):
         )
 
         crs, qrs, circuit = self._instantiate_qiskit(
-            len(classical_register_map.keys()),
-            len(quantum_register_map.keys())
+            len(classical_register_map),
+            len(quantum_register_map)
         )
 
         self._transpile_instructions(
@@ -51,7 +55,26 @@ class Intermediary_IBM_Compiler(Compiler):
             defined_gate_map
         )
 
-        return IBM(circuit)
+        # TODO: Verify that the code works once IBM comes back up.
+        try:
+            compiled_circuit = qiskit.compile(
+                circuit, ibmq.backends[target_lang]
+            )
+        except:
+            raise ValueError(
+                "We failed to compile the circuit to the specified hardware."
+            )
+
+        if (len(compiled_circuit.experiments) != 1) \
+           or not compiled_circuit.experiments[0].header \
+           or not compiled_circuit.experiments[0].header.compiled_circuit_qasm:
+            raise ValueError("THe compilation failed to produce valid result.")
+
+        compiled_qasm_string = \
+            compiled_circuit.experiments[0].header.compiled_circuit_qasm
+        compiled_qasm_circuit = \
+            qiskit.QuantumCircuit.from_qasm_str(compiled_qasm_string)
+        return IBM(compiled_qasm_circuit)
 
     def _construct_defined_gate_map(self, defined_gates):
         defined_gate_map = {}
@@ -73,11 +96,10 @@ class Intermediary_IBM_Compiler(Compiler):
         qiskit_index = 0
 
         declarations = [
-            instr for instr in instructions if isinstance(instr, Declare)
+            instr for instr in instructions
+            if isinstance(instr, Declare) and instr.memory_type == "BIT"
         ]
-        declarations = [
-            instr for instr in declarations if instr.memory_type == "BIT"
-        ]
+
         declaration_map = {}
         for instr in declarations:
             if instr.name in declaration_map.keys():
@@ -224,10 +246,10 @@ class Intermediary_IBM_Compiler(Compiler):
                 elif instr.name == "ISWAP":
                     circ.swap(qiskit_qs[0], qiskit_qs[1])
                     circ.x(qiskit_qs[0])
-                    circ.cu1(pi / 2, qiskit_qs[0], qiskit_qs[1])
+                    circ.cu1(numpy.pi / 2, qiskit_qs[0], qiskit_qs[1])
                     circ.x(qiskit_qs[0])
                     circ.x(qiskit_qs[1])
-                    circ.cu1(pi / 2, qiskit_qs[0], qiskit_qs[1])
+                    circ.cu1(numpy.pi / 2, qiskit_qs[0], qiskit_qs[1])
                     circ.x(qiskit_qs[1])
                 elif instr.name == "PSWAP":
                     circ.swap(qiskit_qs[0], qiskit_qs[1])
