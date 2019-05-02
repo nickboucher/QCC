@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
 import numpy
-import qiskit
-
-from qcc.interfaces import Compiler
-from qcc.hardware import IBM, Rigetti, ibmq
+from pyquil import get_qc
 from pyquil.quilbase import Declare, Gate, Halt, Measurement, Pragma, \
     Reset, ResetQubit
 from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
+
+import qcc.assembly
+from qcc.compilers.direct_compilers import QASM_IBM_Compiler
+from qcc.hardware import IBM, Rigetti
+from qcc.interfaces import Compiler
+
+# TODO: A lot of testing.
 
 
 class Intermediary_IBM_Compiler(Compiler):
     """ Compiles Intermediary Language to IBM """
 
-    # TODO: Clean up style!
     def compile(self, source, target_lang):
         """ Compile from the intermediary language to QASM. """
 
         # TODO: Move any functionality out that depends on the specific
-        # implementation of the intermediary language.
+        #   implementation of the intermediary language.
         program = source.quil.program
         instructions = program.instructions
 
@@ -31,7 +34,7 @@ class Intermediary_IBM_Compiler(Compiler):
             program.defined_gates
         )
 
-        instructions = self._filter_instructions(instructions)
+        instructions = self._remove_pragmas(instructions)
 
         classical_register_map = self._construct_classical_register_map(
             instructions
@@ -55,41 +58,35 @@ class Intermediary_IBM_Compiler(Compiler):
             defined_gate_map
         )
 
-        # TODO: Verify that the code works once IBM comes back up.
-        try:
-            compiled_circuit = qiskit.compile(
-                circuit, ibmq.backends[target_lang]
-            )
-        except:
-            raise ValueError(
-                "We failed to compile the circuit to the specified hardware."
-            )
+        compiled_circuit = self._compile_circuit(circuit, target_lang)
+        return IBM(compiled_circuit)
 
-        if (len(compiled_circuit.experiments) != 1) \
-           or not compiled_circuit.experiments[0].header \
-           or not compiled_circuit.experiments[0].header.compiled_circuit_qasm:
-            raise ValueError("THe compilation failed to produce valid result.")
+    @staticmethod
+    def _construct_defined_gate_map(defined_gates):
+        """ Construct a map from names to defined gate objects. """
 
-        compiled_qasm_string = \
-            compiled_circuit.experiments[0].header.compiled_circuit_qasm
-        compiled_qasm_circuit = \
-            qiskit.QuantumCircuit.from_qasm_str(compiled_qasm_string)
-        return IBM(compiled_qasm_circuit)
-
-    def _construct_defined_gate_map(self, defined_gates):
         defined_gate_map = {}
         for gate in defined_gates:
             defined_gate_map[gate.name] = gate
         return defined_gate_map
 
+    @staticmethod
     # TODO: Determine whether there is a corresponding PRAGMA for BARRIER.
-    def _filter_instructions(self, instructions):
-        """ Filter out instructions we want to ignore. """
-        def keep_condition(x):
-            return not isinstance(x, Pragma)
-        return [instr for instr in instructions if keep_condition(instr)]
+    def _remove_pragmas(instructions):
+        """ Remove PRAGMAs from the instructions. """
 
-    def _construct_classical_register_map(self, instructions):
+        return [
+            instr for instr in instructions if not isinstance(instr, Pragma)
+        ]
+
+    @staticmethod
+    def _construct_classical_register_map(instructions):
+        """
+        Create a map from classical register instances in the Quil code
+        to indices in the classical register object that we create for
+        the Qiskit circuit.
+        """
+
         classical_register_map = {}
 
         # The next classical register to assign
@@ -134,7 +131,14 @@ class Intermediary_IBM_Compiler(Compiler):
 
         return classical_register_map
 
-    def _construct_quantum_register_map(self, instructions):
+    @staticmethod
+    def _construct_quantum_register_map(instructions):
+        """
+        Create a map from quantum register instances in the Quil code to
+        indices in the quantum register object that we create for the
+        Qiskit circuit.
+        """
+
         quantum_register_map = {}
 
         # The next quantum register to assign
@@ -157,7 +161,13 @@ class Intermediary_IBM_Compiler(Compiler):
 
         return quantum_register_map
 
-    def _instantiate_qiskit(self, cr_count, qr_count):
+    @staticmethod
+    def _instantiate_qiskit(cr_count, qr_count):
+        """
+        Instantiate the appropriate Qiskit objects for the creation of
+        a Qiskit circuit.
+        """
+
         crs = ClassicalRegister(cr_count)
         qrs = QuantumRegister(qr_count)
         circuit = QuantumCircuit(qrs, crs)
@@ -165,6 +175,11 @@ class Intermediary_IBM_Compiler(Compiler):
 
     def _transpile_instructions(self, crs, qrs, circ, insts,
                                 cr_map, qr_map, dg_map):
+        """
+        Transpile instructions from Quil to QASM using the classical register
+        map, quantum register map, and defined gate map.
+        """
+
         for instr in insts:
             if isinstance(instr, Reset):
                 circ.reset(qrs)
@@ -189,84 +204,107 @@ class Intermediary_IBM_Compiler(Compiler):
                 if instr.name in dg_map.keys():
                     raise ValueError("TODO: Implement defined gates.")
 
-                if len(instr.modifiers) > 0:
+                if len(instr.modifiers) >= 1:
                     raise ValueError("TODO: Incorporate gate modifiers.")
 
-                params = instr.params
-                q_keys = [str(qubit) for qubit in instr.qubits]
-                qiskit_qs = [qrs[qr_map[key]] for key in q_keys]
-                if instr.name == "I":
-                    circ.iden(qiskit_qs[0])
-                elif instr.name == "X":
-                    circ.x(qiskit_qs[0])
-                elif instr.name == "Y":
-                    circ.y(qiskit_qs[0])
-                elif instr.name == "Z":
-                    circ.z(qiskit_qs[0])
-                elif instr.name == "H":
-                    circ.h(qiskit_qs[0])
-                elif instr.name == "S":
-                    circ.s(qiskit_qs[0])
-                elif instr.name == "T":
-                    circ.t(qiskit_qs[0])
-                elif instr.name == "RX":
-                    circ.rx(params[0], qiskit_qs[0])
-                elif instr.name == "RY":
-                    circ.ry(params[0], qiskit_qs[0])
-                elif instr.name == "RZ":
-                    circ.rz(params[0], qiskit_qs[0])
-                elif instr.name == "PHASE":
-                    circ.rz(params[0], qiskit_qs[0])
-                elif instr.name == "CZ":
-                    circ.cz(qiskit_qs[0], qiskit_qs[1])
-                elif instr.name == "CNOT":
-                    circ.cx(qiskit_qs[0], qiskit_qs[1])
-                elif instr.name == "CCNOT":
-                    circ.ccx(qiskit_qs[0], qiskit_qs[1], qiskit_qs[2])
-                elif instr.name == "CPHASE00":
-                    circ.x(qiskit_qs[0])
-                    circ.x(qiskit_qs[1])
-                    circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[1])
-                    circ.x(qiskit_qs[0])
-                elif instr.name == "CPHASE01":
-                    circ.x(qiskit_qs[0])
-                    circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[0])
-                elif instr.name == "CPHASE10":
-                    circ.x(qiskit_qs[1])
-                    circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[1])
-                elif instr.name == "CPHASE":
-                    circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
-                elif instr.name == "SWAP":
-                    circ.swap(qiskit_qs[0], qiskit_qs[1])
-                elif instr.name == "CSWAP":
-                    circ.cswap(qiskit_qs[0], qiskit_qs[1], qiskit_qs[2])
-                elif instr.name == "ISWAP":
-                    circ.swap(qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[0])
-                    circ.cu1(numpy.pi / 2, qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[0])
-                    circ.x(qiskit_qs[1])
-                    circ.cu1(numpy.pi / 2, qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[1])
-                elif instr.name == "PSWAP":
-                    circ.swap(qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[0])
-                    circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[0])
-                    circ.x(qiskit_qs[1])
-                    circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
-                    circ.x(qiskit_qs[1])
-                else:
-                    raise ValueError("The gate %s is unknown." % instr.name)
+                self._transpile_standard_gate(qrs, circ, instr, qr_map)
             else:
                 raise ValueError("The program is not a ProtoQuil program.")
+
+    @staticmethod
+    def _transpile_standard_gate(qrs, circ, instr, qr_map):
+        """ Add a single standard gate to the Qiskit circuit. """
+
+        params = instr.params
+        q_keys = [str(qubit) for qubit in instr.qubits]
+        qiskit_qs = [qrs[qr_map[key]] for key in q_keys]
+        if instr.name == "I":
+            circ.iden(qiskit_qs[0])
+        elif instr.name == "X":
+            circ.x(qiskit_qs[0])
+        elif instr.name == "Y":
+            circ.y(qiskit_qs[0])
+        elif instr.name == "Z":
+            circ.z(qiskit_qs[0])
+        elif instr.name == "H":
+            circ.h(qiskit_qs[0])
+        elif instr.name == "S":
+            circ.s(qiskit_qs[0])
+        elif instr.name == "T":
+            circ.t(qiskit_qs[0])
+        elif instr.name == "RX":
+            circ.rx(params[0], qiskit_qs[0])
+        elif instr.name == "RY":
+            circ.ry(params[0], qiskit_qs[0])
+        elif instr.name == "RZ":
+            circ.rz(params[0], qiskit_qs[0])
+        elif instr.name == "PHASE":
+            circ.rz(params[0], qiskit_qs[0])
+        elif instr.name == "CZ":
+            circ.cz(qiskit_qs[0], qiskit_qs[1])
+        elif instr.name == "CNOT":
+            circ.cx(qiskit_qs[0], qiskit_qs[1])
+        elif instr.name == "CCNOT":
+            circ.ccx(qiskit_qs[0], qiskit_qs[1], qiskit_qs[2])
+        elif instr.name == "CPHASE00":
+            circ.x(qiskit_qs[0])
+            circ.x(qiskit_qs[1])
+            circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[1])
+            circ.x(qiskit_qs[0])
+        elif instr.name == "CPHASE01":
+            circ.x(qiskit_qs[0])
+            circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[0])
+        elif instr.name == "CPHASE10":
+            circ.x(qiskit_qs[1])
+            circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[1])
+        elif instr.name == "CPHASE":
+            circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
+        elif instr.name == "SWAP":
+            circ.swap(qiskit_qs[0], qiskit_qs[1])
+        elif instr.name == "CSWAP":
+            circ.cswap(qiskit_qs[0], qiskit_qs[1], qiskit_qs[2])
+        elif instr.name == "ISWAP":
+            circ.swap(qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[0])
+            circ.cu1(numpy.pi / 2, qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[0])
+            circ.x(qiskit_qs[1])
+            circ.cu1(numpy.pi / 2, qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[1])
+        elif instr.name == "PSWAP":
+            circ.swap(qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[0])
+            circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[0])
+            circ.x(qiskit_qs[1])
+            circ.cu1(params[0], qiskit_qs[0], qiskit_qs[1])
+            circ.x(qiskit_qs[1])
+        else:
+            raise ValueError("The gate %s is unknown." % instr.name)
+
+    # TODO: Verify that the code works once IBM comes back up.
+    @staticmethod
+    def _compile_circuit(circuit, target_lang):
+        """ Compile the circuit for the specific target language. """
+
+        # Not ideal, since we go to QASM then back to the circuit.
+        qasm = qcc.assembly.QASM(circuit.qasm())
+        compiler = QASM_IBM_Compiler()
+        return compiler.compile(qasm, target_lang)
 
 
 class Intermediary_Rigetti_Compiler(Compiler):
     """ Compiles Intermediary Language to Rigetti """
 
-    def compile(self, source, target_lang):
-        return Rigetti(source.quil.program)
+    # TODO: Test once we set up the Rigetti account.
+    @staticmethod
+    def compile(source, target_lang):
+        """ Compile from the intermediary language to a Quil program. """
+
+        program = source.quil.program
+        qc = get_qc(target_lang)
+        compiled_program = qc.compiler.quil_to_native_quil(program)
+        return Rigetti(compiled_program)
