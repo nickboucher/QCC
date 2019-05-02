@@ -10,6 +10,7 @@ if exists(config_file):
 # Use default section keys
 config = config_parse["DEFAULT"]
 
+verbosity = 2
 
 qasm_lang = "qasm"
 quil_lang = "quil"

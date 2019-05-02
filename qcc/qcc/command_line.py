@@ -13,14 +13,15 @@ def parse_cli_args(args=None):
     parser.add_argument(
         'source-file',
         type=argparse.FileType(mode='r', encoding='utf-8'))
+    parser.add_argument('--target-lang', dest='target-lang', choices=config.hw_langs)
+    parser.add_argument('--auto-target', dest='auto-target', action='store_true')
+    parser.add_argument('--profiles', action='store_true')
     parser.add_argument(
         '--stats',
         dest='print_stats',
         action='store_true',
         help='Print statistics about program rather than source')
-    parser.add_argument('--target-lang', dest='target-lang', choices=config.hw_langs)
-    parser.add_argument('--auto-target', dest='auto-target', action='store_true')
-    parser.add_argument('--profiles', action='store_true')
+    parser.add_argument('-v', '--verbose', dest='verbosity', type=int, choices=[1,2], default=2)
     args = vars(parser.parse_args(args))
     if not exactly_one_true(args['target-lang'] is not None, args['profiles'], args['auto-target']):
         parser.error("Must choose exactly one of {--target-lang, --auto-target, --profiles}")
@@ -35,6 +36,7 @@ def main(should_init=True, input_args=None):
     if should_init:
         qcc.init()
     args = parse_cli_args(input_args)
+    config.verbosity = args["verbosity"]
     if args['target-lang'] is not None:
         prog = qcc.compile(
             args['source-lang'],
