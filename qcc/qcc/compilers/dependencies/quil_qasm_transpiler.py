@@ -195,14 +195,16 @@ class Quil_QASM_Transpiler:
             elif isinstance(instr, (Declare, Pragma)):
                 continue
             elif isinstance(instr, Gate):
-                if len(instr.modifiers) >= 1:
-                    raise ValueError("TODO: Incorporate gate modifiers.")
-
                 if instr.name in dg_map.keys():
                     self._transpile_defined_gate(
                         crs, qrs, circ, instr, cr_map, qr_map, dg_map
                     )
                 else:
+                    if len(instr.modifiers) >= 1:
+                        raise ValueError(
+                            "TODO: Gate modifiers with standard gates."
+                        )
+
                     self._transpile_standard_gate(qrs, circ, instr, qr_map)
             else:
                 raise ValueError("The program is not a ProtoQuil program.")
