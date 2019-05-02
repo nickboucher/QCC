@@ -16,7 +16,9 @@ class Quil_QASM_Transpiler:
 
         instructions = program.instructions
 
-        # TODO: Expand from ProtoQuil programs to anything IBM can handle.
+        # TODO: Expand from ProtoQuil programs to anything IBM can handle,
+        #   namely DEFCIRCUITs and IFs. Note, however, that PyQuil does not
+        #   parse DEFCIRCUIT statements.
         if not program.is_protoquil():
             raise ValueError("The Quil program is not a ProtoQuil program.")
 
