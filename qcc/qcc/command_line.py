@@ -7,7 +7,7 @@ def exactly_one_true(*bools : bool) -> bool:
     """ Return True iff exactly one of the arguments is True """
     return sum(bools) == 1
 
-def parse_cli_args():
+def parse_cli_args(args=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('source-lang', choices=config.asm_langs)
     parser.add_argument(
@@ -21,7 +21,7 @@ def parse_cli_args():
     parser.add_argument('--target-lang', dest='target-lang', choices=config.hw_langs)
     parser.add_argument('--auto-target', dest='auto-target', action='store_true')
     parser.add_argument('--profiles', action='store_true')
-    args = vars(parser.parse_args())
+    args = vars(parser.parse_args(args))
     if not exactly_one_true(args['target-lang'] is not None, args['profiles'], args['auto-target']):
         parser.error("Must choose exactly one of {--target-lang, --auto-target, --profiles}")
     if args['profiles'] and args['print_stats']:
@@ -30,10 +30,10 @@ def parse_cli_args():
     return args
 
 
-def main():
+def main(args=None):
     # load languages
     qcc.init()
-    args = parse_cli_args()
+    args = parse_cli_args(args)
     if args['target-lang'] is not None:
         prog = qcc.compile(
             args['source-lang'],
