@@ -214,6 +214,7 @@ class Intermediary_IBM_Compiler(Compiler):
             else:
                 raise ValueError("The program is not a ProtoQuil program.")
 
+    # TODO: Is this the best way to decompose a user-defined gate?
     def _transpile_defined_gate(self, crs, qrs, circ, instr,
                                 cr_map, qr_map, dg_map):
         """
