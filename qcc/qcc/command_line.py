@@ -57,3 +57,6 @@ def main(args=None):
             print("Result below:", prog.get_statistics(), sep='\n')
         else:
             print("Result below:", prog, sep='\n')
+
+    if args['source-file']:
+        args['source-file'].close()
