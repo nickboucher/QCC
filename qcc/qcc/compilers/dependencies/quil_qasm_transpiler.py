@@ -11,8 +11,11 @@ from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
 class Quil_QASM_Transpiler:
     """ Transpiler from Quil to QASM. """
 
-    def transpile(self, program):
-        """ Transpile Quil to QASM, taking a Quil program as input. """
+    def transpile(self, program: Program) -> QuantumCircuit:
+        """
+        Transpile Quil to QASM at a higher level, taking a Quil program
+        as input.
+        """
 
         instructions = program.instructions
 
@@ -214,7 +217,7 @@ class Quil_QASM_Transpiler:
 
         definition = dg_map[instr.name]
 
-        # Create a small program with the single instruction
+        # Create a small Quil program with the single instruction
         invocation = Program()
         invocation += definition
         invocation += instr
