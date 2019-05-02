@@ -180,9 +180,9 @@ class Quil_QASM_Transpiler:
             elif isinstance(instr, Measurement):
                 q_key = str(instr.qubit)
 
-                cr = instr.classical_reg
-                if cr:
-                    c_key = "%s[%s]" % (cr.name, cr.offset)
+                c_reg = instr.classical_reg
+                if c_reg:
+                    c_key = "%s[%s]" % (c_reg.name, c_reg.offset)
                 else:
                     c_key = q_key
 
@@ -213,13 +213,13 @@ class Quil_QASM_Transpiler:
         definition = dg_map[instr.name]
 
         # Create a small program with the single instruction
-        p = Program()
-        p += definition
-        p += instr
+        invocation = Program()
+        invocation += definition
+        invocation += instr
 
         max_qubit = max([qubit.index for qubit in instr.qubits])
-        qc = get_qc("%sq-qvm" % (max_qubit + 1))
-        decomposition = qc.compiler.quil_to_native_quil(p)
+        qvm = get_qc("%sq-qvm" % (max_qubit + 1))
+        decomposition = qvm.compiler.quil_to_native_quil(invocation)
 
         decomp_insts = decomposition.instructions
         self._transpile_instructions(
