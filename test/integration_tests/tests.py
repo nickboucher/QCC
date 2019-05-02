@@ -26,7 +26,7 @@ class IntegrationTests(unittest.TestCase):
 
         qcc.init()
 
-    def directory_tester(self, source_lang, expected_output_dir_name, sources):
+    def directory_tester(self, sources, get_args, expected_output_dir_name):
         """
         Check that each expected output in the given directory
             matches the actual output on the corresponding input.
@@ -43,17 +43,21 @@ class IntegrationTests(unittest.TestCase):
             trgt = '_'.join(namesplit[:-1])
             src_num = namesplit[-1]
             with Capturing() as actual_output:
-                qcc.command_line.main(False, [source_lang, sources[src_num], "--target-lang", trgt])
+                qcc.command_line.main(False, get_args(sources[src_num], trgt))
             actual_output_str = '\n'.join(actual_output)
             with open(filepath, 'r') as f:
                 expected_output_str = f.read() + '\n'
                 self.assertEqual(actual_output_str, expected_output_str)
 
-    def test_quil_to_rigetti(self):
-        self.directory_tester("quil", "quil_to_rigetti", self.src_quil)
-
     def test_qasm_to_ibm(self):
-        self.directory_tester("qasm", "qasm_to_ibm", self.src_qasm)
+        def get_args(src, trgt):
+            return ["qasm", src, "--target-lang", trgt]
+        self.directory_tester(self.src_qasm, get_args, "qasm_to_ibm")
+
+    def test_quil_to_rigetti(self):
+        def get_args(src, trgt):
+            return ["quil", src, "--target-lang", trgt]
+        self.directory_tester(self.src_quil, get_args, "quil_to_rigetti")
 
 if __name__ == '__main__':
     unittest.main()
