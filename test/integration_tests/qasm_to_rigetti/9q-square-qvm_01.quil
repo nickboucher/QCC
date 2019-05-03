@@ -1,0 +1,43 @@
+DEFGATE u2\(%phi, %lambda\):
+    0.7071067811865475, -1\*1.0\*EXP\(i\*%lambda\)\*1.0/1.4142135623730951
+    EXP\(i\*%phi\)\*1.0/1.4142135623730951, EXP\(i\*%lambda \+ i\*%phi\)\*1.0/1.4142135623730951
+
+DEFGATE u3\(%theta, %phi, %lambda\):
+    COS\(%theta/2.0\), -1\*1.0\*EXP\(i\*%lambda\)\*SIN\(%theta/2.0\)
+    EXP\(i\*%phi\)\*SIN\(%theta/2.0\), EXP\(i\*%lambda \+ i\*%phi\)\*COS\(%theta/2.0\)
+
+DECLARE ro BIT\[5\]
+PRAGMA EXPECTED_REWIRING "#\(0 1 2 3 4 5 6 7 8\)"
+RZ\(pi/2\) 0
+RX\(pi/2\) 0
+RZ\(pi/2\) 3
+RX\(pi/2\) 3
+CZ 3 0
+RZ\(0.3000000000000005\) 0
+RZ\(-1.7707963267948965\) 1
+RX\(pi/2\) 1
+RZ\(-0.48539816339744846\) 1
+RZ\(3.041592653589793\) 2
+RX\(-pi/2\) 2
+RZ\(0.30000000000000004\) 2
+RX\(-pi/2\) 2
+RZ\(0.2\) 2
+RX\(-pi/2\) 3
+RZ\(pi/2\) 3
+PRAGMA CURRENT_REWIRING "#\(0 1 2 3 4 5 6 7 8\)"
+JUMP-WHEN @THEN1 ro\[0\]
+JUMP @BLK-\d\d\d
+LABEL @END2
+PRAGMA EXPECTED_REWIRING "#\(0 1 2 3 4 5 6 7 8\)"
+MEASURE 0 ro\[0\]
+PRAGMA CURRENT_REWIRING "#\(0 1 2 3 4 5 6 7 8\)"
+HALT
+LABEL @THEN1
+PRAGMA EXPECTED_REWIRING "#\(0 1 2 3 4 5 6 7 8\)"
+RZ\(pi\) 2
+PRAGMA CURRENT_REWIRING "#\(0 1 2 3 4 5 6 7 8\)"
+JUMP @END2
+LABEL @BLK-\d\d\d
+PRAGMA EXPECTED_REWIRING "#\(0 1 2 3 4 5 6 7 8\)"
+PRAGMA CURRENT_REWIRING "#\(0 1 2 3 4 5 6 7 8\)"
+JUMP @END2

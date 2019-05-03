@@ -46,8 +46,8 @@ class IntegrationTests(unittest.TestCase):
                 qcc.command_line.main(False, get_args(sources[src_num], trgt))
             actual_output_str = '\n'.join(actual_output)
             with open(filepath, 'r') as f:
-                expected_output_str = f.read() + '\n'
-                self.assertEqual(actual_output_str, expected_output_str)
+                expected_output_str = '\A' + f.read() + '\n\Z'
+                self.assertRegex(actual_output_str, expected_output_str)
 
     def test_qasm_to_ibm(self):
         def get_args(src, trgt):
@@ -58,6 +58,16 @@ class IntegrationTests(unittest.TestCase):
         def get_args(src, trgt):
             return ["quil", src, "--target-lang", trgt, "-v", "1"]
         self.directory_tester(self.src_quil, get_args, "quil_to_rigetti")
+
+    def test_quil_to_ibm(self):
+        def get_args(src, trgt):
+            return ["quil", src, "--target-lang", trgt, "-v", "1"]
+        self.directory_tester(self.src_quil, get_args, "quil_to_ibm")
+
+    def test_qasm_to_rigetti(self):
+        def get_args(src, trgt):
+            return ["qasm", src, "--target-lang", trgt, "-v", "1"]
+        self.directory_tester(self.src_qasm, get_args, "qasm_to_rigetti")
 
 if __name__ == '__main__':
     unittest.main()
