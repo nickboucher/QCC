@@ -4,6 +4,7 @@ import sys
 import argparse
 import qcc.config as config
 import qcc
+from  qcc.util import qprint
 
 def exactly_one_true(*bools : bool) -> bool:
     """ Return True iff exactly one of the arguments is True """
@@ -39,7 +40,11 @@ def main(should_init=True, input_args=None):
     if should_init:
         qcc.init()
     args = parse_cli_args(input_args)
-    config.verbosity = args["verbosity"]
+    if "verbosity" not in args:
+        config.current_verbosity = 2
+    else:
+        config.current_verbosity = args["verbosity"]
+
     if args["output_file"]:
         output_file = open(args["output_file"], 'w')
     else:
@@ -50,25 +55,26 @@ def main(should_init=True, input_args=None):
             args['target-lang'],
             args['source-file'])
 
-        print("*" * 50)
+        qprint("*" * 50)
         if args['print_stats']:
-            print(prog.get_statistics(), file=output_file)
+            qprint(prog.get_statistics(), file=output_file, priority=1)
         else:
-            print(prog, file=output_file)
+            qprint(prog, file=output_file, priority=1)
     elif args['profiles']:
-        print("*" * 50)
+        qprint("*" * 50)
         profiles = qcc.get_profiles(args['source-lang'], args['source-file'])
         for target, stats in profiles:
-            print("*" * 10, target, "*" * 10, file=output_file)
-            print(stats, file=output_file)
+            qprint("*" * 10, target, "*" * 10, file=output_file, priority=1)
+            qprint(stats, file=output_file, priority=1)
     elif args['auto-target']:
         target, prog = qcc.compile_to_auto_target(args['source-lang'], args['source-file'])
-        print("Chosen target:", target)
-        print("*" * 50)
+        # TODO: turn this into a commment depending on the hardware?
+        qprint("Chosen target:", target, priority=1)
+        qprint("*" * 50)
         if args['print_stats']:
-            print(prog.get_statistics(), file=output_file)
+            qprint(prog.get_statistics(), file=output_file, priority=1)
         else:
-            print(prog, file=output_file)
+            qprint(prog, file=output_file, priority=1)
 
     if args['source-file']:
         args['source-file'].close()

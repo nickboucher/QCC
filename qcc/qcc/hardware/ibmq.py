@@ -4,6 +4,7 @@ from typing import List
 import qiskit
 
 from qcc.config import config
+from  qcc.util import qprint
 
 backends = {}
 backend_names: List[str] = []
@@ -11,7 +12,9 @@ backend_names: List[str] = []
 
 def init():
     global backends, backend_names
-    print("Loading ibmqx account and information...")
+    # TODO: determine whether we want to print this (helps user deal with
+    # IBM server latency)
+    # qprint("Loading ibmqx account and information...", priority=1)
     qiskit.IBMQ.enable_account(config["IBMQ_API_TOKEN"])
 
     backend_objs = list(filter(filter_backend, load_backends()))

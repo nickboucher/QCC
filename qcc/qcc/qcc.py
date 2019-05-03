@@ -7,6 +7,8 @@ from qcc.hardware import ibmq, rigetti
 from qcc.hardware.hardware_program_statistics import HardwareConstrainedProgramInfo
 from qcc.interfaces import AsmProgram, Compiler, HardwareConstrainedProgram
 from qcc.intermediary_lang import IntermediaryProgram
+from  qcc.util import qprint
+
 
 def create_source_prog(lang: str, source_file: IO[str]) -> AsmProgram:
     prog_string: str = source_file.read()
@@ -29,11 +31,11 @@ def init() -> None:
 
 def compile_from_program(source_lang: str, target_lang: str, source_prog: AsmProgram) -> HardwareConstrainedProgram:
     if qcc.config.direct_compile_from[target_lang] == source_lang:
-        print("Direct compilation path found to {}".format(target_lang))
+        qprint("Direct compilation path found to {}".format(target_lang))
         direct_compiler: Compiler = source_prog.get_direct_compiler(target_lang)
         hardware_prog: HardwareConstrainedProgram = direct_compiler.compile(source_prog, target_lang)
     else:
-        print("No direct compilation path found to {}: compiling through".format(target_lang),
+        qprint("No direct compilation path found to {}: compiling through".format(target_lang),
               "intermediary language")
         intermediary_compiler: Compiler = source_prog.get_intermediary_compiler()
         intermediary_prog: IntermediaryProgram = intermediary_compiler.compile(
@@ -47,7 +49,7 @@ def compile_from_program(source_lang: str, target_lang: str, source_prog: AsmPro
     return hardware_prog
 
 def compile(source_lang: str, target_lang: str, source_file: IO[str]) -> HardwareConstrainedProgram:
-    print("Request: compile", source_lang, "to", target_lang)
+    qprint("Request: compile", source_lang, "to", target_lang)
     source_prog: AsmProgram = create_source_prog(source_lang, source_file)
     return compile_from_program(source_lang, target_lang, source_prog)
 
