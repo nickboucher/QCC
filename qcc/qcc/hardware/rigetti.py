@@ -15,7 +15,9 @@ def init():
 
 def start_quilc():
     try:
-        subprocess.run(['quilc', '-v'], capture_output=True)
+        subprocess.run(['quilc', '-v'],
+                       stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL)
     except FileNotFoundError:
         raise EnvironmentError("quilc is not accesible on the system path. "
                                "Have you installed quilc?")
