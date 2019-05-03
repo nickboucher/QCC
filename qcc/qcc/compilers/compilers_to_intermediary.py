@@ -40,7 +40,7 @@ class QASM_Intermediary_Compiler(Compiler):
         exec("global p\n" + quil_str)
         quil = qcc.assembly.Quil()
         quil.program = p
-        return IntermediaryProgram(quil=p)
+        return IntermediaryProgram(quil=quil)
 
 
 class Quil_Intermediary_Compiler(Compiler):
