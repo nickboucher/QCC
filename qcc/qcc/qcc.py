@@ -29,11 +29,11 @@ def init() -> None:
 
 def compile_from_program(source_lang: str, target_lang: str, source_prog: AsmProgram) -> HardwareConstrainedProgram:
     if qcc.config.direct_compile_from[target_lang] == source_lang:
-        print("Direct compilation path found: compiling directly")
+        print("Direct compilation path found to {}".format(target_lang))
         direct_compiler: Compiler = source_prog.get_direct_compiler(target_lang)
         hardware_prog: HardwareConstrainedProgram = direct_compiler.compile(source_prog, target_lang)
     else:
-        print("No direct compilation path found: compiling through",
+        print("No direct compilation path found to {}: compiling through".format(target_lang),
               "intermediary language")
         intermediary_compiler: Compiler = source_prog.get_intermediary_compiler()
         intermediary_prog: IntermediaryProgram = intermediary_compiler.compile(
