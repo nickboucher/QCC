@@ -51,12 +51,12 @@ class IntegrationTests(unittest.TestCase):
 
     def test_qasm_to_ibm(self):
         def get_args(src, trgt):
-            return ["qasm", src, "--target-lang", trgt]
+            return ["qasm", src, "--target-lang", trgt, "-v", "1"]
         self.directory_tester(self.src_qasm, get_args, "qasm_to_ibm")
 
     def test_quil_to_rigetti(self):
         def get_args(src, trgt):
-            return ["quil", src, "--target-lang", trgt]
+            return ["quil", src, "--target-lang", trgt, "-v", "1"]
         self.directory_tester(self.src_quil, get_args, "quil_to_rigetti")
 
 if __name__ == '__main__':
