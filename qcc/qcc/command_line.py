@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import sys
+
 import argparse
 import qcc.config as config
 import qcc
@@ -22,11 +24,12 @@ def parse_cli_args(args=None):
         action='store_true',
         help='Print statistics about program rather than source')
     parser.add_argument('-v', '--verbose', dest='verbosity', type=int, choices=[1,2], default=2)
+    parser.add_argument('-o', dest='output_file', type=str)
     args = vars(parser.parse_args(args))
     if not exactly_one_true(args['target-lang'] is not None, args['profiles'], args['auto-target']):
         parser.error("Must choose exactly one of {--target-lang, --auto-target, --profiles}")
     if args['profiles'] and args['print_stats']:
-        parser.error("Cannot use --stats flag with --profiles")
+        parser.error("Cannot use --stats flag with --profiles.")
 
     return args
 
@@ -37,29 +40,35 @@ def main(should_init=True, input_args=None):
         qcc.init()
     args = parse_cli_args(input_args)
     config.verbosity = args["verbosity"]
+    if args["output_file"]:
+        output_file = open(args["output_file"], 'w')
+    else:
+        output_file = sys.stdout
     if args['target-lang'] is not None:
         prog = qcc.compile(
             args['source-lang'],
             args['target-lang'],
             args['source-file'])
 
+        print("*" * 50)
         if args['print_stats']:
-            print("Result below:", prog.get_statistics(), sep='\n')
+            print(prog.get_statistics(), file=output_file)
         else:
-            print("Result below:", prog, sep='\n')
+            print(prog, file=output_file)
     elif args['profiles']:
-        print("Profiles below:")
+        print("*" * 50)
         profiles = qcc.get_profiles(args['source-lang'], args['source-file'])
         for target, stats in profiles:
-            print("*" * 10, target, "*" * 10)
-            print(stats)
+            print("*" * 10, target, "*" * 10, file=output_file)
+            print(stats, file=output_file)
     elif args['auto-target']:
         target, prog = qcc.compile_to_auto_target(args['source-lang'], args['source-file'])
         print("Chosen target:", target)
+        print("*" * 50)
         if args['print_stats']:
-            print("Result below:", prog.get_statistics(), sep='\n')
+            print(prog.get_statistics(), file=output_file)
         else:
-            print("Result below:", prog, sep='\n')
+            print(prog, file=output_file)
 
     if args['source-file']:
         args['source-file'].close()
