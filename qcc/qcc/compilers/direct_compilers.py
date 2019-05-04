@@ -19,7 +19,6 @@ class QASM_IBM_Compiler(Compiler):
             new_circuit = transpile(
                 source.circuit,
                 backend=backend,
-                # TODO: The user should have the ability to specify.
                 optimization_level=0
             )
             compiled_qobj = assemble(
