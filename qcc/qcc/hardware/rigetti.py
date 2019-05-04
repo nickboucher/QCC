@@ -22,7 +22,7 @@ def start_quilc():
         raise EnvironmentError("quilc is not accesible on the system path. "
                                "Have you installed quilc?")
     quilc = subprocess.Popen(
-        ["quilc", "-S"],
+        "quilc -S",
         shell=True,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
