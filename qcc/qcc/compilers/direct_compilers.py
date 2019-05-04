@@ -38,6 +38,6 @@ class Quil_Rigetti_Compiler(Compiler):
     """ Compiles Quil to Rigetti """
 
     def compile(self, source, target_lang):
-        qc = get_qc(target_lang)
+        qc = get_qc(target_lang, as_qvm=True)
         compiled_quil = qc.compiler.quil_to_native_quil(source.program)
         return Rigetti(compiled_quil)
