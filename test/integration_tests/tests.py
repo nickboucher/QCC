@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from util import Capturing
+from integration_tests.util import Capturing
 import qcc.command_line
 
 class IntegrationTests(unittest.TestCase):
