@@ -8,9 +8,6 @@ from qcc.compilers.dependencies.quil_qasm_transpiler import \
 from qcc.hardware import Rigetti
 from qcc.interfaces import Compiler
 
-# TODO: Move any functionality out that depends on the specific
-#   implementation of the intermediary language.
-
 
 class Intermediary_IBM_Compiler(Compiler):
     """ Compiles Intermediary Language to IBM """
