@@ -26,8 +26,9 @@ def start_quilc():
                                "Have you installed quilc?")
 
     def kill_quilc():
+        quilc.terminate()
         try:
-            quilc.wait(timeout=2)
+            quilc.wait(timeout=1)
         except subprocess.TimeoutExpired:
             quilc.kill()
 
