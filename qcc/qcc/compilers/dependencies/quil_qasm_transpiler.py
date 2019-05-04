@@ -5,6 +5,7 @@ from pyquil.quilbase import Declare, Gate, Halt, Measurement, Pragma, \
     Reset, ResetQubit
 from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
 
+
 class Quil_QASM_Transpiler:
     """ Transpiler from Quil to QASM. """
 
@@ -16,9 +17,6 @@ class Quil_QASM_Transpiler:
 
         instructions = program.instructions
 
-        # TODO: Expand from ProtoQuil programs to anything IBM can handle,
-        #   namely DEFCIRCUITs and IFs. Note, however, that PyQuil does not
-        #   give users a way to write DEFCIRCUIT statements.
         if not program.is_protoquil():
             raise ValueError("The Quil program is not a ProtoQuil program.")
 
@@ -62,7 +60,6 @@ class Quil_QASM_Transpiler:
         return defined_gate_map
 
     @staticmethod
-    # TODO: Determine whether there is a corresponding PRAGMA for BARRIER.
     def _remove_pragmas(instructions):
         """ Remove PRAGMAs from the instructions. """
 
@@ -197,8 +194,6 @@ class Quil_QASM_Transpiler:
                         crs, qrs, circ, instr, cr_map, qr_map, dg_map
                     )
                 else:
-                    # TODO: Find a better way to decompose a modified
-                    #   standard gate.
                     if len(instr.modifiers) >= 1:
                         self._transpile_via_native_quil(
                             crs, qrs, circ, cr_map, qr_map, dg_map, instr
@@ -208,7 +203,6 @@ class Quil_QASM_Transpiler:
             else:
                 raise ValueError("The program is not a ProtoQuil program.")
 
-    # TODO: Is this the best way to decompose an arbitrary user-defined gate?
     def _transpile_defined_gate(self, crs, qrs, circ, instr,
                                 cr_map, qr_map, dg_map):
         """ Transpile a user-defined gate. """
