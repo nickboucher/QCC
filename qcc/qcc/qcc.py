@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from typing import IO, List, Tuple
-
+from pyquil import Program
 import qcc.config
 from qcc.assembly import QASM, Quil
 from qcc.hardware import ibmq, rigetti
@@ -28,6 +28,16 @@ def init() -> None:
     qcc.config.add_direct_compile(rigetti.backend_names, qcc.config.quil_lang)
     qcc.config.add_rigetti_langs(rigetti.backend_names)
 
+def get_source_lang(source_file: IO[str]) -> str:
+    code = source_file.read()
+    source_file.seek(0)
+    if code.startswith("OPENQASM"):
+        return "qasm"
+    try:
+        Program(code)
+        return "quil"
+    except RuntimeError:
+        raise SyntaxError("Invalid input file.")
 
 def compile_from_program(source_lang: str, target_lang: str, source_prog: AsmProgram) -> HardwareConstrainedProgram:
     if qcc.config.direct_compile_from[target_lang] == source_lang:
