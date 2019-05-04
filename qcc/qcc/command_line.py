@@ -34,7 +34,7 @@ def parse_cli_args(args=None):
     hw_target = args['target-lang']
 
     if hw_target.startswith("ibmq"):
-        print("Asssuming platform is IBM, loading HW description")
+        qprint("Asssuming platform is IBM, loading HW description")
         qcc.qcc.init_ibmq()
 
     if hw_target not in config.hw_langs:
