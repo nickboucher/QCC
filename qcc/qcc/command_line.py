@@ -15,7 +15,7 @@ def parse_cli_args(args=None):
     parser.add_argument(
         'source-file',
         type=argparse.FileType(mode='r', encoding='utf-8'))
-    parser.add_argument('--target-lang', dest='target-lang', type=str)
+    parser.add_argument('--target', dest='target', type=str)
     parser.add_argument('--auto-target', dest='auto-target', action='store_true')
     parser.add_argument('--profiles', action='store_true')
     parser.add_argument(
@@ -26,12 +26,12 @@ def parse_cli_args(args=None):
     parser.add_argument('-v', '--verbose', dest='verbosity', type=int, choices=[1,2], default=2)
     parser.add_argument('-o', dest='output_file', type=str)
     args = vars(parser.parse_args(args))
-    if not exactly_one_true(args['target-lang'] is not None, args['profiles'], args['auto-target']):
-        parser.error("Must choose exactly one of {--target-lang, --auto-target, --profiles}")
+    if not exactly_one_true(args['target'] is not None, args['profiles'], args['auto-target']):
+        parser.error("Must choose exactly one of {--target, --auto-target, --profiles}")
     if args['profiles'] and args['print_stats']:
         parser.error("Cannot use --stats flag with --profiles.")
 
-    hw_target = args['target-lang']
+    hw_target = args['target']
 
     if hw_target.startswith("ibmq"):
         print("Asssuming platform is IBM, loading HW description")
@@ -61,10 +61,10 @@ def main(should_init=True, input_args=None):
         output_file = open(args["output_file"], 'w')
     else:
         output_file = sys.stdout
-    if args['target-lang'] is not None:
+    if args['target'] is not None:
         prog = qcc.compile(
             source_lang,
-            args['target-lang'],
+            args['target'],
             args['source-file'])
 
         qprint("*" * 50)
