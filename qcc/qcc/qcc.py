@@ -20,13 +20,14 @@ def create_source_prog(lang: str, source_file: IO[str]) -> AsmProgram:
         raise ValueError("lang is not a valid language.")
 
 def init() -> None:
-    ibmq.init()
-    qcc.config.add_direct_compile(ibmq.backend_names, qcc.config.qasm_lang)
-    qcc.config.add_ibm_langs(ibmq.backend_names)
-
     rigetti.init()
     qcc.config.add_direct_compile(rigetti.backend_names, qcc.config.quil_lang)
     qcc.config.add_rigetti_langs(rigetti.backend_names)
+
+def init_ibmq() -> None:
+    ibmq.init()
+    qcc.config.add_direct_compile(ibmq.backend_names, qcc.config.qasm_lang)
+    qcc.config.add_ibm_langs(ibmq.backend_names)
 
 
 def compile_from_program(source_lang: str, target_lang: str, source_prog: AsmProgram) -> HardwareConstrainedProgram:
