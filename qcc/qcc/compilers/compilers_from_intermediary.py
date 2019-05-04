@@ -43,6 +43,6 @@ class Intermediary_Rigetti_Compiler(Compiler):
         """ Compile from the intermediary language to a Quil program. """
 
         program = source.quil.program
-        compiler = get_qc(target_lang).compiler
+        compiler = get_qc(target_lang, as_qvm=True).compiler
         compiled_program = compiler.quil_to_native_quil(program)
         return Rigetti(compiled_program)
