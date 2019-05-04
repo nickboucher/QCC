@@ -20,7 +20,6 @@ def start_quilc():
             shell=True,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL)
-        print(quilc.pid)
     except FileNotFoundError:
         raise EnvironmentError("quilc is not accesible on the system path. "
                                "Have you installed quilc?")
