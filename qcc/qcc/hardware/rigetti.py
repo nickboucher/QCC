@@ -15,23 +15,16 @@ def init():
 
 def start_quilc():
     try:
-        subprocess.run(['quilc', '-v'],
-                       stdout=subprocess.DEVNULL,
-                       stderr=subprocess.DEVNULL)
+        quilc = subprocess.Popen(
+            "exec quilc -S",
+            shell=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL)
     except FileNotFoundError:
         raise EnvironmentError("quilc is not accesible on the system path. "
                                "Have you installed quilc?")
-    quilc = subprocess.Popen(
-        "quilc -S",
-        shell=True,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL)
 
     def kill_quilc():
-        quilc.terminate()
-        try:
-            quilc.wait(timeout=2)
-        except subprocess.TimeoutExpired:
-            quilc.kill()
+        quilc.kill()
 
     atexit.register(kill_quilc)
