@@ -3,7 +3,6 @@
 
 class HardwareConstrainedProgramInfo:
     def __init__(self, num_insts):
-        # TODO: determine what statistics we want to take in
         self.num_insts = num_insts
         pass
 

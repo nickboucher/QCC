@@ -80,7 +80,6 @@ def main(should_init=True, input_args=None):
             qprint(stats, file=output_file, priority=1)
     elif args['auto-target']:
         target, prog = qcc.compile_to_auto_target(source_lang, args['source-file'])
-        # TODO: turn this into a commment depending on the hardware?
         qprint("Chosen target:", target, priority=1)
         qprint("*" * 50)
         if args['print_stats']:
