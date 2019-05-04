@@ -5,9 +5,6 @@ from pyquil.quilbase import Declare, Gate, Halt, Measurement, Pragma, \
     Reset, ResetQubit
 from qiskit import ClassicalRegister, QuantumRegister, QuantumCircuit
 
-# TODO: A lot of testing.
-
-
 class Quil_QASM_Transpiler:
     """ Transpiler from Quil to QASM. """
 

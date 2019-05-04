@@ -12,11 +12,10 @@ def exactly_one_true(*bools : bool) -> bool:
 
 def parse_cli_args(args=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('source-lang', choices=config.asm_langs)
     parser.add_argument(
         'source-file',
         type=argparse.FileType(mode='r', encoding='utf-8'))
-    parser.add_argument('--target-lang', dest='target-lang', choices=config.hw_langs)
+    parser.add_argument('--target-lang', dest='target-lang', type=str)
     parser.add_argument('--auto-target', dest='auto-target', action='store_true')
     parser.add_argument('--profiles', action='store_true')
     parser.add_argument(
@@ -32,6 +31,18 @@ def parse_cli_args(args=None):
     if args['profiles'] and args['print_stats']:
         parser.error("Cannot use --stats flag with --profiles.")
 
+    hw_target = args['target-lang']
+
+    if hw_target.startswith("ibmq"):
+        print("Asssuming platform is IBM, loading HW description")
+        qcc.qcc.init_ibmq()
+
+    if hw_target not in config.hw_langs:
+        # if targets starts with ibmq, assume it's an ibm platform and actually
+        # make a call to their API (doing this to minimize network footprint)
+        parser.error("Target {} not supported  (must be one of {}) or an IBM platform"\
+                .format(hw_target, config.hw_langs))
+
     return args
 
 
@@ -40,6 +51,7 @@ def main(should_init=True, input_args=None):
     if should_init:
         qcc.init()
     args = parse_cli_args(input_args)
+    source_lang = qcc.get_source_lang(args['source-file'])
     if "verbosity" not in args:
         config.current_verbosity = 2
     else:
@@ -51,7 +63,7 @@ def main(should_init=True, input_args=None):
         output_file = sys.stdout
     if args['target-lang'] is not None:
         prog = qcc.compile(
-            args['source-lang'],
+            source_lang,
             args['target-lang'],
             args['source-file'])
 
@@ -62,13 +74,12 @@ def main(should_init=True, input_args=None):
             qprint(prog, file=output_file, priority=1)
     elif args['profiles']:
         qprint("*" * 50)
-        profiles = qcc.get_profiles(args['source-lang'], args['source-file'])
+        profiles = qcc.get_profiles(source_lang, args['source-file'])
         for target, stats in profiles:
             qprint("*" * 10, target, "*" * 10, file=output_file, priority=1)
             qprint(stats, file=output_file, priority=1)
     elif args['auto-target']:
-        target, prog = qcc.compile_to_auto_target(args['source-lang'], args['source-file'])
-        # TODO: turn this into a commment depending on the hardware?
+        target, prog = qcc.compile_to_auto_target(source_lang, args['source-file'])
         qprint("Chosen target:", target, priority=1)
         qprint("*" * 50)
         if args['print_stats']:

@@ -1,37 +1,38 @@
 #!/usr/bin/env python3
-import sys
-import qiskit
+import qcc.util
+from qiskit.compiler import transpile, assemble
+from qiskit.converters import qobj_to_circuits
 from pyquil import get_qc
 from qcc.interfaces import Compiler
 from qcc.hardware import IBM, Rigetti, ibmq
 
 
-# TODO: complete and implement this set of compilers
 class QASM_IBM_Compiler(Compiler):
     """ Compiles QASM to IBM """
 
     def compile(self, source, target_lang):
-        try:
-            compiled_qobj = qiskit.compile(
-                source.circuit,
-                ibmq.backends[target_lang])
-        except:
-            raise ValueError("Failed to compile circuit to specified hardware")
-        # TODO: It would be nice to use qiskit.converters.qobj_to_circuits
-        #       for this. Unfortunately their code throws an error when
-        #       I try to use it.
-        if (
-            len(compiled_qobj.experiments) != 1
-            or not compiled_qobj.experiments[0].header
-            or not compiled_qobj.experiments[0].header.compiled_circuit_qasm
-        ):
-            raise ValueError("Compilation failed to produce valid result.")
+        qcc.util.qprint("Beginning QASM compilation...", priority=2)
 
-        compiled_qasm_str = \
-            compiled_qobj.experiments[0].header.compiled_circuit_qasm
-        compiled_qasm_circuit = \
-            qiskit.QuantumCircuit.from_qasm_str(compiled_qasm_str)
-        return IBM(compiled_qasm_circuit)
+        try:
+            backend = ibmq.backends[target_lang]
+            # Requires Qiskit >= 0.9.0
+            new_circuit = transpile(
+                source.circuit,
+                backend=backend,
+                # TODO: The user should have the ability to specify.
+                optimization_level=0
+            )
+            compiled_qobj = assemble(
+                new_circuit,
+                backend=backend
+            )
+        except:
+            raise ValueError("Failed to compile to the specified hardware.")
+
+        qcc.util.qprint("Finished QASM compilation!", priority=2)
+
+        compiled_circuit = qobj_to_circuits(compiled_qobj)[0]
+        return IBM(compiled_circuit)
 
 
 class Quil_Rigetti_Compiler(Compiler):

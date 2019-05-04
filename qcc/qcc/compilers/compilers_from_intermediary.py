@@ -37,7 +37,6 @@ class Intermediary_IBM_Compiler(Compiler):
 class Intermediary_Rigetti_Compiler(Compiler):
     """ Compiles Intermediary Language to Rigetti """
 
-    # TODO: Test once we set up the Rigetti account.
     @staticmethod
     def compile(source, target_lang):
         """ Compile from the intermediary language to a Quil program. """
