@@ -25,6 +25,3 @@ class CompilersToIntermediaryTests(unittest.TestCase):
             qasm_prog = QASM(qasm_str)
             compiler = QASM_Intermediary_Compiler()
             compiler.compile(qasm_prog)
-
-if __name__ == '__main__':
-    unittest.main()
