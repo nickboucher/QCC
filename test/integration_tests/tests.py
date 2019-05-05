@@ -24,8 +24,6 @@ class IntegrationTests(unittest.TestCase):
             filepath = os.path.join(src_quil_path, filename)
             self.src_quil[src_num] = filepath
 
-        qcc.init()
-
     def directory_tester(self, sources, get_args, expected_output_dir_name):
         """
         Check that each expected output in the given directory
@@ -70,4 +68,6 @@ class IntegrationTests(unittest.TestCase):
         self.directory_tester(self.src_qasm, get_args, "qasm_to_rigetti")
 
 if __name__ == '__main__':
+    qcc.init()
+    qcc.init_ibmq()
     unittest.main()

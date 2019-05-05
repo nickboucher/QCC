@@ -10,7 +10,7 @@ def exactly_one_true(*bools : bool) -> bool:
     """ Return True iff exactly one of the arguments is True """
     return sum(bools) == 1
 
-def parse_cli_args(args=None):
+def parse_cli_args(args=None, should_init=True):
     parser = argparse.ArgumentParser()
     parser.add_argument(
         'source-file',
@@ -33,7 +33,7 @@ def parse_cli_args(args=None):
 
     hw_target = args['target']
 
-    if hw_target.startswith("ibmq"):
+    if hw_target.startswith("ibmq") and should_init:
         qprint("Asssuming platform is IBM, loading HW description")
         qcc.qcc.init_ibmq()
 
@@ -50,7 +50,7 @@ def main(should_init=True, input_args=None):
     # load languages
     if should_init:
         qcc.init()
-    args = parse_cli_args(input_args)
+    args = parse_cli_args(input_args, should_init)
     source_lang = qcc.get_source_lang(args['source-file'])
     if "verbosity" not in args:
         config.current_verbosity = 2

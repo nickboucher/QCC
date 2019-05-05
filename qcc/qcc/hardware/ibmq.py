@@ -4,7 +4,7 @@ from typing import List
 import qiskit
 
 from qcc.config import config
-from  qcc.util import qprint
+from qcc.util import qprint
 
 backends = {}
 backend_names: List[str] = []
