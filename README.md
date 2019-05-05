@@ -21,6 +21,15 @@ In order to use any QUIL functionality, you must also have the [Rigetti Forest S
 quilc -S
 ```
 
+## Testing ##
+
+To run the test suite, simply run `python test/run_tests.py`
+
+To add tests simply add the appropriate files, using the existing tests as examples.
+Make sure to add `__init__.py` files where appropriate to ensure correct discovery of test scripts.
+All test script files should start match the form `test*.py`.
+All `unittest` methods should start with `test` and use assertions and other useful features of the `unittest` package.
+
 ## MyPy for Development ##
 
 You can perform type checking for this codebase using `mypy` with the following commands from the root repo directory:
