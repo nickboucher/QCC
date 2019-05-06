@@ -93,6 +93,66 @@ class QuilQASMTranspilerTests(unittest.TestCase):
         cr_name = qasm_circuit.cregs[0].name
         crs = ClassicalRegister(1, name=cr_name)
         expected = QuantumCircuit(qrs, crs)
-        expected.rx(0, qrs[0])
+        expected.rx(1, qrs[0])
+        expected.measure(qrs[0], crs[0])
+        assert(qasm_circuit == expected)
+
+    def testquil_qasm_transpiler_transpile_07(self):
+        """ Test for the correct transpilation of src_07.quil. """
+        qasm_circuit = self._get_transpilation_output("src_07.quil")
+        qr_name = qasm_circuit.qregs[0].name
+        qrs = QuantumRegister(1, name=qr_name)
+        cr_name = qasm_circuit.cregs[0].name
+        crs = ClassicalRegister(1, name=cr_name)
+        expected = QuantumCircuit(qrs, crs)
+        expected.ry(1, qrs[0])
+        expected.measure(qrs[0], crs[0])
+        assert(qasm_circuit == expected)
+
+    def testquil_qasm_transpiler_transpile_08(self):
+        """ Test for the correct transpilation of src_08.quil. """
+        qasm_circuit = self._get_transpilation_output("src_08.quil")
+        qr_name = qasm_circuit.qregs[0].name
+        qrs = QuantumRegister(1, name=qr_name)
+        cr_name = qasm_circuit.cregs[0].name
+        crs = ClassicalRegister(1, name=cr_name)
+        expected = QuantumCircuit(qrs, crs)
+        expected.rz(1, qrs[0])
+        expected.measure(qrs[0], crs[0])
+        assert(qasm_circuit == expected)
+
+    def testquil_qasm_transpiler_transpile_09(self):
+        """ Test for the correct transpilation of src_09.quil. """
+        qasm_circuit = self._get_transpilation_output("src_09.quil")
+        qr_name = qasm_circuit.qregs[0].name
+        qrs = QuantumRegister(1, name=qr_name)
+        cr_name = qasm_circuit.cregs[0].name
+        crs = ClassicalRegister(1, name=cr_name)
+        expected = QuantumCircuit(qrs, crs)
+        expected.rz(1, qrs[0])
+        expected.measure(qrs[0], crs[0])
+        assert(qasm_circuit == expected)
+
+    def testquil_qasm_transpiler_transpile_10(self):
+        """ Test for the correct transpilation of src_10.quil. """
+        qasm_circuit = self._get_transpilation_output("src_10.quil")
+        qr_name = qasm_circuit.qregs[0].name
+        qrs = QuantumRegister(1, name=qr_name)
+        cr_name = qasm_circuit.cregs[0].name
+        crs = ClassicalRegister(1, name=cr_name)
+        expected = QuantumCircuit(qrs, crs)
+        expected.s(qrs[0])
+        expected.measure(qrs[0], crs[0])
+        assert(qasm_circuit == expected)
+
+    def testquil_qasm_transpiler_transpile_11(self):
+        """ Test for the correct transpilation of src_11.quil. """
+        qasm_circuit = self._get_transpilation_output("src_11.quil")
+        qr_name = qasm_circuit.qregs[0].name
+        qrs = QuantumRegister(1, name=qr_name)
+        cr_name = qasm_circuit.cregs[0].name
+        crs = ClassicalRegister(1, name=cr_name)
+        expected = QuantumCircuit(qrs, crs)
+        expected.t(qrs[0])
         expected.measure(qrs[0], crs[0])
         assert(qasm_circuit == expected)
