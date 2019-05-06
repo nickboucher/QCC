@@ -5,6 +5,7 @@ from qiskit.converters import qobj_to_circuits
 from pyquil import get_qc
 from qcc.interfaces import Compiler
 from qcc.hardware import IBM, Rigetti, ibmq
+import warnings
 
 
 class QASM_IBM_Compiler(Compiler):
@@ -30,7 +31,15 @@ class QASM_IBM_Compiler(Compiler):
 
         qcc.util.qprint("Finished QASM compilation!", priority=2)
 
+        # reader who lives in a qiskit Terra >= 0.9 future: This code filters a
+        # deprecation warning for `qiskit.converter.qobj_to_circuit` which has
+        # been replaced with `qiskit.compiler.disassemble_circuits`. The new
+        # function is not available at the time of the writing of this comment,
+        # but if it is available to you, please kindly remove the supressal
+        # of the warning and replace the call with the non-deprecated function.
+        warnings.filterwarnings('ignore')
         compiled_circuit = qobj_to_circuits(compiled_qobj)[0]
+        warnings.filters.pop(0)
         return IBM(compiled_circuit)
 
 
