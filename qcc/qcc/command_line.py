@@ -36,7 +36,7 @@ def parse_cli_args(args=None, should_init=True):
                         dest='verbosity',
                         type=int,
                         choices=[1, 2],
-                        default=2)
+                        default=1)
     parser.add_argument('-o', dest='output_file', type=str)
     args = vars(parser.parse_args(args))
     if not exactly_one_true(args['target'] is not None, args['profiles'], args['auto-target']):
