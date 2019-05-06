@@ -16,10 +16,7 @@ pip install -e qcc/
 ```
 ### Install Rigetti Components
 
-In order to use any QUIL functionality, you must also have the [Rigetti Forest SDK](https://www.rigetti.com/forest) installed. After that, you must run the following command in a separate terminal:
-```bash
-quilc -S
-```
+In order to use any QUIL functionality, you must also have the [Rigetti Forest SDK](https://www.rigetti.com/forest) installed.
 
 ## Testing ##
 
