@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 import sys
-
 import argparse
 import qcc.config as config
 import qcc
-from  qcc.util import qprint
+from qcc.util import qprint
 
-def exactly_one_true(*bools : bool) -> bool:
+
+def exactly_one_true(*bools: bool) -> bool:
     """ Return True iff exactly one of the arguments is True """
     return sum(bools) == 1
+
 
 def parse_cli_args(args=None, should_init=True):
     parser = argparse.ArgumentParser()
@@ -17,13 +18,25 @@ def parse_cli_args(args=None, should_init=True):
         type=argparse.FileType(mode='r', encoding='utf-8'))
     parser.add_argument('--target', dest='target', type=str)
     parser.add_argument('--auto-target', dest='auto-target', action='store_true')
+    parser.add_argument('-m',
+                        '--metric',
+                        type=str,
+                        dest='metric',
+                        default='num_2_qubit_gates',
+                        help="The metric to use for auto-target optimization. " \
+                             "Should be one of {'num_2_qubit_gates', 'num_insts'}. " \
+                             "Defaults to 'num_2_qubit_gates'.")
     parser.add_argument('--profiles', action='store_true')
-    parser.add_argument(
-        '--stats',
-        dest='print_stats',
-        action='store_true',
-        help='Print statistics about program rather than source')
-    parser.add_argument('-v', '--verbose', dest='verbosity', type=int, choices=[1,2], default=2)
+    parser.add_argument('--stats',
+                        dest='print_stats',
+                        action='store_true',
+                        help='Print statistics about program rather than source')
+    parser.add_argument('-v',
+                        '--verbose',
+                        dest='verbosity',
+                        type=int,
+                        choices=[1, 2],
+                        default=2)
     parser.add_argument('-o', dest='output_file', type=str)
     args = vars(parser.parse_args(args))
     if not exactly_one_true(args['target'] is not None, args['profiles'], args['auto-target']):
@@ -79,7 +92,9 @@ def main(should_init=True, input_args=None):
             qprint("*" * 10, target, "*" * 10, file=output_file, priority=1)
             qprint(stats, file=output_file, priority=1)
     elif args['auto-target']:
-        target, prog = qcc.compile_to_auto_target(source_lang, args['source-file'])
+        target, prog = qcc.compile_to_auto_target(source_lang,
+                                                  args['source-file'],
+                                                  args['metric'])
         qprint("Chosen target:", target, priority=1)
         qprint("*" * 50)
         if args['print_stats']:
