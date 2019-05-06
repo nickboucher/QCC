@@ -7,4 +7,4 @@ if __name__ == '__main__':
     qcc.init()
     qcc.init_ibmq()
     testsuite = unittest.TestLoader().discover('.')
-    unittest.TextTestRunner().run(testsuite)
+    unittest.TextTestRunner(verbosity=2).run(testsuite)
