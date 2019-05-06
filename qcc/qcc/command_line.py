@@ -33,11 +33,11 @@ def parse_cli_args(args=None, should_init=True):
 
     hw_target = args['target']
 
-    if hw_target.startswith("ibmq") and should_init:
+    if hw_target and hw_target.startswith("ibmq") and should_init:
         qprint("Asssuming platform is IBM, loading HW description")
         qcc.qcc.init_ibmq()
 
-    if hw_target not in config.hw_langs:
+    if hw_target and hw_target not in config.hw_langs:
         # if targets starts with ibmq, assume it's an ibm platform and actually
         # make a call to their API (doing this to minimize network footprint)
         parser.error("Target {} not supported  (must be one of {}) or an IBM platform"\
