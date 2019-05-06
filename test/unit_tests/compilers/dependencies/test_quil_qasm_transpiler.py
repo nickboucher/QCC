@@ -38,6 +38,6 @@ class QuilQASMTranspilerTests(unittest.TestCase):
             cr_name = qasm_circuit.cregs[0].name
             crs = ClassicalRegister(1, name=cr_name)
             expected = QuantumCircuit(qrs, crs)
-            expected.x(qrs[0])
+            expected.iden(qrs[0])
             expected.measure(qrs[0], crs[0])
             assert(qasm_circuit == expected)
