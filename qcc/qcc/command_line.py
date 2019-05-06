@@ -46,8 +46,8 @@ def parse_cli_args(args=None, should_init=True):
 
     hw_target = args['target']
 
-    if hw_target and hw_target.startswith("ibmq") and should_init:
-        qprint("Asssuming platform is IBM, loading HW description")
+    if (hw_target and hw_target.startswith("ibmq") and should_init) or \
+            args['auto-target']:
         qcc.qcc.init_ibmq()
 
     if hw_target and hw_target not in config.hw_langs:
