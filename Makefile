@@ -12,5 +12,7 @@ install: $(VENV_NAME)
 clean:
 	rm -rf $(VENV_NAME)
 
+test:
+	source $(VENV_NAME)/bin/activate && python3 test/run_tests.py
 
-.PHONY: clean
+.PHONY: clean test
