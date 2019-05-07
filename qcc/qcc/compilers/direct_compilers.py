@@ -16,11 +16,10 @@ class QASM_IBM_Compiler(Compiler):
 
         try:
             backend = ibmq.backends[target_lang]
-            # Requires Qiskit >= 0.9.0
             new_circuit = transpile(
                 source.circuit,
                 backend=backend,
-                optimization_level=2
+                optimization_level=1
             )
             compiled_qobj = assemble(
                 new_circuit,
