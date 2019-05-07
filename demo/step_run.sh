@@ -1,6 +1,5 @@
 #!/bin/bash
 
-input="/path/to/txt/file"
 IFS=$'\n'
 set -f
 for LINE in $(cat < "$1");
