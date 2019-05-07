@@ -12,7 +12,7 @@ setuptools.setup(
         'console_scripts': ['qcc=qcc.command_line:main'],
     },
     install_requires=[
-        'qiskit',
+        'qiskit>=0.9',
         'configparser',
         'pyquil',
         'pyduktape',
