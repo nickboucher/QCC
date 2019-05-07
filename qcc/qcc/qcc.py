@@ -85,7 +85,18 @@ def compile_to_auto_target(source_lang : str, source_file: IO[str], metric: str)
     along with the target language used for this compilation
     """
     compilations = compile_all(source_lang, source_file)
-    def score(target_prog_pair):
+    def store_comp_score(target_prog_pair):
         target, prog = target_prog_pair
-        return (target, prog.get_statistics().score(metric))
-    return min(compilations, key=score)
+        return (target, prog, prog.get_statistics().score(metric))
+    def extract_score(comp_score_tuple):
+        return comp_score_tuple[2]
+    ## extend compilation list with computed scores
+    comps_with_scores = [store_comp_score(comp) for comp in compilations]
+    ## find one optimal compilation
+    best_compilation = min(comps_with_scores, key=extract_score)
+    ## find all targets with best score
+    best_targets = [comp[0] for comp in comps_with_scores
+                         if comp[2] == best_compilation[2]]
+    if len(best_targets) > 1:
+        qprint("Choosing from these equally optimal targets: ", best_targets)
+    return (best_compilation[0], best_compilation[1])
