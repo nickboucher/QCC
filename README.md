@@ -62,8 +62,6 @@ These arguments are defined as follows:
   - `help`: prints the help instructions
 
 
-  Additionally, the `list` verb can be invoked to list all of the target hardwares supported by QCC.
-
 ## Testing
 
 To run the test suite, simply run `python test/run_tests.py`
