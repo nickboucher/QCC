@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="qcc",
-    version="0.0.1",
+    version="0.1",
     author="Nicholas Boucher, Nathanael Cho, Juan Esteller, Brian Sapozhnikov",
     description="Quantum Code Compiler",
     long_description="Cross-compiles quantum assembly codes",
