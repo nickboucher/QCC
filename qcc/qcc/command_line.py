@@ -32,7 +32,7 @@ def parse_cli_args(args=None, should_init=True):
     parser.add_argument('--list',
                         dest='list',
                         action='store_true',
-                        help='Print statistics about program rather than source')
+                        help='Lists all available target hardwares')
 
 
     parser.add_argument('--stats',
